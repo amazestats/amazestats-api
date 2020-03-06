@@ -1,6 +1,20 @@
 (ns wolley.handlers
   (:require [clojure.tools.logging :as log]
-            [wolley.database :as db]))
+            [ring.util.response :refer [bad-request created not-found]]
+            [wolley.database :as db]
+            [wolley.util.response :refer [internal-error ok]]))
+
+(defn get-divisions
+  [request]
+  (ok {:divisions (db/get-divisions)}))
+
+(defn create-division!
+  [request]
+  (let [division-name (get-in request [:body :name])
+        division (db/create-division! division-name)]
+    (if (not (nil? division))
+      (created (str "/api/divisions/" (:id division)))
+      (bad-request "Could not create division."))))
 
 (defn get-teams
   [request]

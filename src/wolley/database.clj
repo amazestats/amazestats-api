@@ -9,6 +9,23 @@
               :user (env :postgres-user)
               :password (env :postgres-password)})
 
+(defn get-divisions
+  []
+  (try
+    (jdbc/query db-spec ["SELECT * FROM divisions"])
+    (catch org.postgresql.util.PSQLException e
+      (log/error e "Failed to get divisions.")
+      nil)))
+
+(defn create-division!
+  [division-name]
+  (first
+    (try
+      (jdbc/insert! db-spec :divisions {:name division-name})
+      (catch org.postgresql.util.PSQLException e
+        (log/error e "Failed to create division:" division-name)
+        nil))))
+
 (defn get-teams
   []
   (try

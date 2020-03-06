@@ -9,6 +9,24 @@
               :user (env :postgres-user)
               :password (env :postgres-password)})
 
+(defn get-teams
+  []
+  (try
+    (jdbc/query db-spec ["SELECT * FROM teams"])
+    (catch org.postgresql.util.PSQLException e
+      (log/error e "Failed to get teams.")
+      nil)))
+
+(defn find-teams-by-division
+  [division-id]
+  (try
+    (jdbc/query
+      db-spec
+      ["SELECT * FROM teams WHERE division = ?" division-id])
+    (catch org.postgresql.util.PSQLException e
+      (log/error e "Failed to get teams for division:" division-id)
+      nil)))
+
 (defn find-matches-by-team
   [team-id]
   (try

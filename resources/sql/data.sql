@@ -1,11 +1,11 @@
-INSERT INTO teams (name) VALUES ('Pineapple Pizza');
-INSERT INTO teams (name) VALUES ('SuperSmash');
-INSERT INTO teams (name) VALUES ('Arsenal');
-INSERT INTO teams (name) VALUES ('Man City');
-INSERT INTO teams (name) VALUES ('Peking');
-
 INSERT INTO divisions (name) VALUES ('Allsvenskan');
 INSERT INTO divisions (name) VALUES ('Superettan');
+
+INSERT INTO teams (name, division) VALUES ('Pineapple Pizza', '1');
+INSERT INTO teams (name, division) VALUES ('SuperSmash', '1');
+INSERT INTO teams (name, division) VALUES ('Arsenal', '1');
+INSERT INTO teams (name, division) VALUES ('Man City', '2');
+INSERT INTO teams (name, division) VALUES ('Peking', '2');
 
 INSERT INTO matches (division, home_team, away_team)
 VALUES ('1', '1', '2');

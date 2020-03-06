@@ -2,10 +2,19 @@
   (:require [clojure.tools.logging :as log]
             [wolley.database :as db]))
 
+(defn get-teams
+  [request]
+  (let [params (:params request)
+        division (:division params)
+        teams (if (not (nil? division))
+                (db/find-teams-by-division (Integer. division))
+                (db/get-teams))]
+    {:status 200
+     :body {:teams teams}}))
+
 (defn get-matches
   [request]
-  (let [body (:body request)
-        params (:params request)
+  (let [params (:params request)
         division (:division params)
         team (:team params)]
 

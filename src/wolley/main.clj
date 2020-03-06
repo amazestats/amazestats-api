@@ -2,4 +2,4 @@
   (:require [ring.middleware.defaults :refer [api-defaults wrap-defaults]]
             [wolley.routes :refer [handlers]]))
 
-(def -main (wrap-defaults handlers api-defaults))
+(def handler (wrap-defaults handlers api-defaults))

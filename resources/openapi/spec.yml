@@ -1,0 +1,233 @@
+openapi: 3.0.0
+
+info:
+  title: Volleyball Stats API
+  version: 0.1.0
+
+tags:
+   - name: divisions
+     description: Operations on divisions
+   - name: teams
+     description: Operations on teams
+
+servers:
+  - url: http://localhost/api
+    description: Development Server
+
+paths:
+  /divisions:
+    get:
+      tags: [divisions]
+      summary: Get all divisions or fetch division by key
+      description: >
+        Can be used to either fetch all divisions or to find divisions by key.
+
+        Note that the key is unique for divisions and therefore a singular
+        return value is given when calling `/divisions?key=X` rather than the
+        list returned when the query parameter *key* is skipped.
+      parameters:
+        - in: query
+          name: key
+          required: false
+          schema:
+            type: string
+          description: Fetch singular division by its key.
+      responses:
+        200:
+          description: Successfully retrieved division/s.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Divisions'
+                  - $ref: '#/components/schemas/Division'
+        400:
+          description: Failed to retrieve division/s.
+
+    post:
+      tags: [divisions]
+      summary: Create new division
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Division'
+      responses:
+        201:
+          description: Successfully created division.
+        400:
+          description: Failed to create division.
+
+  /divisions/{id}:
+    get:
+      tags: [divisions]
+      summary: Get division by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Numeric ID of the division.
+      responses:
+        200:
+          description: Successfully retrieved division.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Division'
+        404:
+          description: Division does not exist.
+
+  /teams:
+    get:
+      tags: [teams]
+      summary: Get selection of teams
+      parameters:
+        - in: query
+          name: division
+          required: false
+          description: To limit search for teams by division.
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successfully retrieved teams.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teams'
+        400:
+          description: Bad request.
+
+    post:
+      tags: [teams]
+      summary: Create new team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teams'
+      responses:
+        201:
+          description: Successfully created team.
+        400:
+          description: Failed to craete team.
+
+  /matches:
+    get:
+      tags: [matches]
+      summary: Get all matches for division or team
+      description: >
+        Get all matches for either a division or team.
+
+        Note that all matches cannot be fetched and that therefore, one of the
+        two query parameters (*division* or *team*) should be provided in order
+        to limit the search.
+      parameters:
+        - in: query
+          name: division
+          schema:
+            type: integer
+          description: Numeric ID of division to get all matches for.
+        - in: query
+          name: team
+          schema:
+            type: integer
+          description: Numeric ID of team to get all matches for.
+      responses:
+        200:
+          description: Successfully retrieved matches.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Matches'
+        400:
+          description: Failed to provide neccessary query parameters.
+
+components:
+  schemas:
+    Set:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        match:
+          type: integer
+        home_score:
+          type: integer
+        away_score:
+          type: integer
+
+    Sets:
+      type: array
+      items:
+        $ref: '#/components/schemas/Set'
+
+    Match:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        division:
+          type: integer
+        home_team:
+          type: integer
+        away_team:
+          type: integer
+        sets:
+          $ref: '#/components/schemas/Sets'
+
+    Matches:
+      type: array
+      items:
+        $ref: '#/components/schemas/Match'
+
+    Team:
+      type: object
+      required:
+        - name
+        - division
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        key:
+          type: string
+          readOnly: true
+        division:
+          type: integer
+
+    Teams:
+      type: array
+      items:
+        $ref: '#/components/schemas/Team'
+
+    Division:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        key:
+          type: string
+          readOnly: true
+        teams:
+          $ref: '#/components/schemas/Teams'
+        matches:
+          $ref: '#/components/schemas/Matches'
+
+    Divisions:
+      type: array
+      items:
+        $ref: '#/components/schemas/Division'

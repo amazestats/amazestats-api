@@ -1,7 +1,8 @@
 (ns wolley.database
   (:require [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
-            [environ.core :refer [env]]))
+            [environ.core :refer [env]]
+            [wolley.util.parse :refer [join]]))
 
 (def db-spec {:dbtype "postgresql"
               :host "database"
@@ -64,7 +65,7 @@
         (log/error e "Failed to create team:" team-name)
         nil))))
 
-(defn find-teams-by-division
+(defn find-teams-by-division-id
   [division-id]
   (try
     (jdbc/query
@@ -72,6 +73,20 @@
       ["SELECT * FROM teams WHERE division = ?" division-id])
     (catch org.postgresql.util.PSQLException e
       (log/error e "Failed to get teams for division:" division-id)
+      nil)))
+
+(defn find-teams-by-division-key
+  [division-key]
+  (try
+    (jdbc/query
+      db-spec
+      [(join "SELECT t.* FROM teams t"
+             "INNER JOIN divisions d"
+             "ON t.division = d.id"
+             "WHERE d.key = ?")
+       division-key])
+    (catch org.postgresql.util.PSQLException e
+      (log/error e "Failed to get teams for division:" division-key)
       nil)))
 
 (defn find-sets-by-match

@@ -20,7 +20,7 @@
 (defn get-division
   [division]
   (let [division-teams (filter-division
-                         (db/find-teams-by-division (:id division)))
+                         (db/find-teams-by-division-id (:id division)))
         division-matches (filter-division
                            (db/find-matches-by-division (:id division)))]
     (ok {:division (assoc division
@@ -60,10 +60,13 @@
 (defn get-teams
   [request]
   (let [params (:params request)
-        division (:division params)
-        teams (if (not (nil? division))
-                (db/find-teams-by-division (Integer. division))
-                (db/get-teams))]
+        division-id (:divisionId params)
+        division-key (:divisionKey params)
+        teams (if (not (nil? division-id))
+                (db/find-teams-by-division-id (Integer. division-id))
+                (if (not (nil? division-key))
+                  (db/find-teams-by-division-key division-key)
+                  (db/get-teams)))]
     {:status 200
      :body {:teams teams}}))
 

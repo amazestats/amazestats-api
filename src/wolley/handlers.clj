@@ -14,7 +14,7 @@
         division (db/create-division! division-name)]
     (if (not (nil? division))
       (created (str "/api/divisions/" (:id division)))
-      (bad-request "Could not create division."))))
+      (bad-request (str "Could not create division: " division-name)))))
 
 (defn get-teams
   [request]
@@ -25,6 +25,16 @@
                 (db/get-teams))]
     {:status 200
      :body {:teams teams}}))
+
+(defn create-team!
+  [request]
+  (let [body (:body request)
+        team-name (:name body)
+        division (:division body)
+        team (db/create-team! team-name division)]
+    (if (not (nil? team))
+      (created (str "/api/teams/" (:id team)))
+      (bad-request (str "Could not create team: " team-name)))))
 
 (defn get-matches
   [request]

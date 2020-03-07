@@ -3,6 +3,7 @@
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [ring.middleware.params :refer [wrap-params]]
             [wolley.handlers :refer [create-division!
+                                     create-team!
                                      get-divisions
                                      get-matches
                                      get-teams]]
@@ -16,7 +17,8 @@
            (context "/matches" []
                     (GET "/" request (get-matches request)))
            (context "/teams" []
-                    (GET "/" request (get-teams request)))))
+                    (GET "/" request (get-teams request))
+                    (POST "/" request (create-team! request)))))
 
 ;; Apply middleware to accept/send JSON data
 (def handlers

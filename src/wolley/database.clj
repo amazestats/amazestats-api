@@ -34,6 +34,16 @@
       (log/error e "Failed to get teams.")
       nil)))
 
+(defn create-team!
+  [team-name division]
+  (first
+    (try
+      (jdbc/insert! db-spec :teams {:name team-name
+                                    :division division})
+      (catch org.postgresql.util.PSQLException e
+        (log/error e "Failed to create team:" team-name)
+        nil))))
+
 (defn find-teams-by-division
   [division-id]
   (try

@@ -9,11 +9,11 @@
   [col]
   (map (fn [x] (dissoc x :division)) col))
 
-(defn create-division-key
-  [division-name]
+(defn create-key
+  [name]
   (string/replace
     (string/replace
-      (string/lower-case division-name)
+      (string/lower-case name)
       " " "-")
     "_" "-"))
 
@@ -51,7 +51,7 @@
 (defn create-division!
   [request]
   (let [division-name (get-in request [:body :name])
-        division-key (create-division-key division-name)
+        division-key (create-key division-name)
         division (db/create-division! division-name division-key)]
     (if (not (nil? division))
       (created (str "/api/divisions/" (:id division)))
@@ -60,22 +60,25 @@
 (defn get-teams
   [request]
   (let [params (:params request)
-        division-id (:divisionId params)
-        division-key (:divisionKey params)
-        teams (if (not (nil? division-id))
-                (db/find-teams-by-division-id (Integer. division-id))
-                (if (not (nil? division-key))
-                  (db/find-teams-by-division-key division-key)
-                  (db/get-teams)))]
-    {:status 200
-     :body {:teams teams}}))
+        team-key (:teamKey params)]
+    (if (not (nil? team-key))
+      (ok {:team (db/get-team-by-key team-key)})
+      (let [division-id (:divisionId params)
+            division-key (:divisionKey params)
+            teams (if (not (nil? division-id))
+                    (db/find-teams-by-division-id (Integer. division-id))
+                    (if (not (nil? division-key))
+                      (db/find-teams-by-division-key division-key)
+                      (db/get-teams)))]
+        (ok {:teams teams})))))
 
 (defn create-team!
   [request]
   (let [body (:body request)
         team-name (:name body)
+        team-key (create-key team-name)
         division (:division body)
-        team (db/create-team! team-name division)]
+        team (db/create-team! team-name team-key division)]
     (if (not (nil? team))
       (created (str "/api/teams/" (:id team)))
       (bad-request (str "Could not create team: " team-name)))))

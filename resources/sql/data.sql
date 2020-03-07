@@ -1,15 +1,23 @@
 INSERT INTO divisions (name, key) VALUES ('Allsvenskan', 'allsvenskan');
 INSERT INTO divisions (name, key) VALUES ('Superettan', 'superettan');
 
-INSERT INTO teams (name, division) VALUES ('Pineapple Pizza', '1');
-INSERT INTO teams (name, division) VALUES ('SuperSmash', '1');
-INSERT INTO teams (name, division) VALUES ('Arsenal', '1');
-INSERT INTO teams (name, division) VALUES ('Man U', '1');
-INSERT INTO teams (name, division) VALUES ('Team Cambio', '1');
-INSERT INTO teams (name, division) VALUES ('Dyrgriparna', '1');
+INSERT INTO teams (name, key, division)
+VALUES ('Pineapple Pizza', 'pineapple-pizza', '1');
+INSERT INTO teams (name, key, division)
+VALUES ('SuperSmash', 'supersmash', '1');
+INSERT INTO teams (name, key, division)
+VALUES ('Arsenal', 'arsenal', '1');
+INSERT INTO teams (name, key, division)
+VALUES ('Man U', 'man-u', '1');
+INSERT INTO teams (name, key, division)
+VALUES ('Team Cambio', 'team-cambio', '1');
+INSERT INTO teams (name, key, division)
+VALUES ('Dyrgriparna', 'dyrgriparna', '1');
 
-INSERT INTO teams (name, division) VALUES ('Man City', '2');
-INSERT INTO teams (name, division) VALUES ('Peking', '2');
+INSERT INTO teams (name, key, division)
+VALUES ('Man City', 'man-city', '2');
+INSERT INTO teams (name, key, division)
+VALUES ('Peking', 'peking', '2');
 
 INSERT INTO matches (division, home_team, away_team)
 VALUES ('1', '1', '2');

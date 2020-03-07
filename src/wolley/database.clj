@@ -55,11 +55,21 @@
       (log/error e "Failed to get teams.")
       nil)))
 
+(defn get-team-by-key
+  [team-key]
+  (first
+    (try
+      (jdbc/query db-spec ["SELECT * FROM teams WHERE key = ?" team-key])
+      (catch org.postgresql.util.PSQLException e
+        (log/error e "Failed to get team:" team-key)
+        nil))))
+
 (defn create-team!
-  [team-name division]
+  [team-name team-key division]
   (first
     (try
       (jdbc/insert! db-spec :teams {:name team-name
+                                    :key team-key
                                     :division division})
       (catch org.postgresql.util.PSQLException e
         (log/error e "Failed to create team:" team-name)

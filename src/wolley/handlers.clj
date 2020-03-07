@@ -4,6 +4,23 @@
             [wolley.database :as db]
             [wolley.util.response :refer [internal-error ok]]))
 
+(defn filter-division
+  [col]
+  (map (fn [x] (dissoc x :division)) col))
+
+(defn get-division
+  [id]
+  (let [division (db/get-division (Integer. id))
+        division-teams (filter-division
+                         (db/find-teams-by-division (:id division)))
+        division-matches (filter-division
+                           (db/find-matches-by-division (:id division)))]
+    (if (not (nil? division))
+      (ok {:division (assoc division
+                            :teams division-teams
+                            :matches division-matches)})
+      (not-found "Division does not exist."))))
+
 (defn get-divisions
   [request]
   (ok {:divisions (db/get-divisions)}))

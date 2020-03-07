@@ -10,6 +10,7 @@
                  [org.clojure/tools.logging "0.4.1"]
                  [org.postgresql/postgresql "42.2.5"]
                  [ring/ring-core "1.7.1"]
+                 [ring-cors "0.1.13"]
                  [ring/ring-defaults "0.3.2"]
                  [ring/ring-json "0.4.0"]]
   :plugins [[lein-ring "0.12.5"]

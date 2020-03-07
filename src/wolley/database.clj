@@ -9,6 +9,15 @@
               :user (env :postgres-user)
               :password (env :postgres-password)})
 
+(defn get-division
+  [id]
+  (first
+    (try
+      (jdbc/query db-spec ["SELECT * FROM divisions WHERE id = ?" id])
+      (catch org.postgresql.util.PSQLException e
+        (log/error e "Failed to get division:" id)
+        nil))))
+
 (defn get-divisions
   []
   (try

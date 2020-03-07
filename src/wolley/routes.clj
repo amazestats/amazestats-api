@@ -1,15 +1,17 @@
 (ns wolley.routes
-  (:require [compojure.core :refer :all]
+  (:require [clojure.tools.logging :as log]
+            [compojure.core :refer :all]
+            [ring.middleware.cors :refer [wrap-cors]]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [ring.middleware.params :refer [wrap-params]]
+            [ring.middleware.resource :refer [wrap-resource]]
             [wolley.handlers :refer [create-division!
                                      create-team!
                                      get-division-by-id
                                      get-divisions
                                      get-matches
                                      get-teams]]
-            [wolley.middleware :refer [wrap-content-type]]
-            [ring.middleware.cors :refer [wrap-cors]]))
+            [wolley.middleware :refer [wrap-content-type]]))
 
 (defroutes api-routes
   (context "/api" []
@@ -23,6 +25,7 @@
                     (GET "/" request (get-teams request))
                     (POST "/" request (create-team! request)))))
 
+
 ;; Apply middleware to accept/send JSON data
 (def handlers
   (-> (routes api-routes)
@@ -31,4 +34,5 @@
       (wrap-params)
       (wrap-json-body {:keywords? true})
       (wrap-content-type "application/json")
-      (wrap-json-response)))
+      (wrap-json-response)
+      (wrap-resource "/public")))

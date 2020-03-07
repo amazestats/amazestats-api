@@ -16,3 +16,10 @@ CREATE TABLE IF NOT EXISTS matches(
   home_team INTEGER REFERENCES teams(id),
   away_Team INTEGER REFERENCES teams(id)
 );
+
+CREATE TABLE IF NOT EXISTS sets(
+  id SERIAL PRIMARY KEY,
+  match INTEGER REFERENCES matches(id),
+  home_score INTEGER,
+  away_score INTEGER
+);

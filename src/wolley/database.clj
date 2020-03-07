@@ -74,23 +74,42 @@
       (log/error e "Failed to get teams for division:" division-id)
       nil)))
 
-(defn find-matches-by-team
-  [team-id]
+(defn find-sets-by-match
+  [match-id]
   (try
     (jdbc/query
       db-spec
-      ["SELECT * FROM matches WHERE home_team = ? OR away_team = ?"
-       team-id team-id])
+      ["SELECT * FROM sets WHERE match = ?" match-id])
     (catch org.postgresql.util.PSQLException e
-      (log/error e "Failed to get matches for team:" team-id)
-      nil)))
+      (log/error e "Failed to get sets for match:" match-id)
+      ())))
+
+(defn attach-sets-to-match
+  [matches]
+  (map (fn [match]
+         (assoc match :sets (find-sets-by-match (:id match))))
+       matches))
+
+(defn find-matches-by-team
+  [team-id]
+  (let [matches
+        (try (jdbc/query
+               db-spec
+               ["SELECT * FROM matches WHERE home_team = ? OR away_TEAM = ?"
+                team-id team-id])
+             (catch org.postgresql.util.PSQLException e
+               (log/error e "Failed to get matches for team:" team-id)
+               ()))]
+    (attach-sets-to-match matches)))
 
 (defn find-matches-by-division
   [division-id]
-  (try
-    (jdbc/query
-      db-spec
-      ["SELECT * FROM matches WHERE division = ?" division-id])
-    (catch org.postgresql.util.PSQLException e
-      (log/error e "Failed to get matches for division:" division-id)
-      nil)))
+  (let [matches
+        (try (jdbc/query
+               db-spec
+               ["SELECT * FROM matches WHERE division = ?"
+               division-id])
+             (catch org.postgresql.util.PSQLException e
+               (log/error e "Failed to get matches for division:" division-id)
+               ()))]
+    (attach-sets-to-match matches)))

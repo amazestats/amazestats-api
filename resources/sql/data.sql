@@ -19,3 +19,18 @@ INSERT INTO matches (division, home_team, away_team)
 VALUES ('1', '3', '2');
 INSERT INTO matches (division, home_team, away_team)
 VALUES ('1', '2', '1');
+
+INSERT INTO sets (match, home_score, away_score)
+VALUES ('1', '25', '13');
+INSERT INTO sets (match, home_score, away_score)
+VALUES ('1', '27', '25');
+INSERT INTO sets (match, home_score, away_score)
+VALUES ('1', '25', '20');
+INSERT INTO sets (match, home_score, away_score)
+VALUES ('2', '23', '25');
+INSERT INTO sets (match, home_score, away_score)
+VALUES ('2', '25', '22');
+INSERT INTO sets (match, home_score, away_score)
+VALUES ('2', '25', '19');
+INSERT INTO sets (match, home_score, away_score)
+VALUES ('2', '25', '13');

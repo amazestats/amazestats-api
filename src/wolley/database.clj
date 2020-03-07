@@ -9,13 +9,23 @@
               :user (env :postgres-user)
               :password (env :postgres-password)})
 
-(defn get-division
+(defn get-division-by-id
   [id]
   (first
     (try
       (jdbc/query db-spec ["SELECT * FROM divisions WHERE id = ?" id])
       (catch org.postgresql.util.PSQLException e
         (log/error e "Failed to get division:" id)
+        nil))))
+
+(defn find-division-by-key
+  [division-key]
+  (first ;; Key should be unique, let's treat this as a unique response
+    (try
+      (jdbc/query db-spec
+                  ["SELECT * FROM divisions WHERE key = ?" division-key])
+      (catch org.postgresql.util.PSQLException e
+        (log/error e "Failed to get division:" division-key)
         nil))))
 
 (defn get-divisions
@@ -27,10 +37,11 @@
       nil)))
 
 (defn create-division!
-  [division-name]
+  [division-name division-key]
   (first
     (try
-      (jdbc/insert! db-spec :divisions {:name division-name})
+      (jdbc/insert! db-spec :divisions {:name division-name
+                                        :key division-key})
       (catch org.postgresql.util.PSQLException e
         (log/error e "Failed to create division:" division-name)
         nil))))

@@ -1,5 +1,5 @@
-INSERT INTO divisions (name) VALUES ('Allsvenskan');
-INSERT INTO divisions (name) VALUES ('Superettan');
+INSERT INTO divisions (name, key) VALUES ('Allsvenskan', 'allsvenskan');
+INSERT INTO divisions (name, key) VALUES ('Superettan', 'superettan');
 
 INSERT INTO teams (name, division) VALUES ('Pineapple Pizza', '1');
 INSERT INTO teams (name, division) VALUES ('SuperSmash', '1');

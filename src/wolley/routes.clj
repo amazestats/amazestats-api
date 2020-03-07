@@ -4,7 +4,7 @@
             [ring.middleware.params :refer [wrap-params]]
             [wolley.handlers :refer [create-division!
                                      create-team!
-                                     get-division
+                                     get-division-by-id
                                      get-divisions
                                      get-matches
                                      get-teams]]
@@ -15,7 +15,7 @@
   (context "/api" []
            (context "/divisions" []
                     (GET "/" request (get-divisions request))
-                    (GET "/:id" [id] (get-division id))
+                    (GET "/:id" [id] (get-division-by-id id))
                     (POST "/" request (create-division! request)))
            (context "/matches" []
                     (GET "/" request (get-matches request)))

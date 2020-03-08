@@ -29,10 +29,10 @@
 ;; Apply middleware to accept/send JSON data
 (def handlers
   (-> (routes api-routes)
-      (wrap-cors :access-control-allow-origin [#".*"]
-                 :access-control-allow-methods [:get :put :post :delete])
       (wrap-params)
       (wrap-json-body {:keywords? true})
       (wrap-content-type "application/json")
       (wrap-json-response)
-      (wrap-resource "/public")))
+      (wrap-resource "/public")
+      (wrap-cors :access-control-allow-origin [#".*"]
+                 :access-control-allow-methods [:get :put :post :delete])))

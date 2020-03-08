@@ -31,3 +31,10 @@ services:
       # postgres data volume is empty.
       - ./resources/sql/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql
       - ./resources/sql/data.sql:/docker-entrypoint-initdb.d/002-data.sql
+
+  openapi:
+    image: swaggerapi/swagger-ui
+    ports:
+      - 8080:8080
+    environment:
+      URL: http://localhost/openapi/spec.yml

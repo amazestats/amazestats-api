@@ -1,4 +1,4 @@
-# wolley
+# amazestats
 
 ## Installation & Execution
 

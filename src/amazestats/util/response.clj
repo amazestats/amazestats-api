@@ -1,4 +1,4 @@
-(ns wolley.util.response)
+(ns amazestats.util.response)
 
 (defn ok
   [body]

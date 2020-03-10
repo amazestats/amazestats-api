@@ -1,4 +1,4 @@
-(ns wolley.middleware
+(ns amazestats.middleware
   (:require [ring.util.response :as response]))
 
 (defn wrap-content-type

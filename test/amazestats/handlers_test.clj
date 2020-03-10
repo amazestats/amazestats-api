@@ -1,7 +1,7 @@
-(ns wolley.handlers-test
+(ns amazestats.handlers-test
   (:require [clojure.test :refer :all]
-            [wolley.handlers :refer :all]
-            [wolley.database :as db]))
+            [amazestats.handlers :refer :all]
+            [amazestats.database :as db]))
 
 (deftest get-users-test
   (testing "200 Empty list on empty database"

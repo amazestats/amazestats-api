@@ -1,6 +1,6 @@
-(ns wolley.util.validators-test
+(ns amazestats.util.validators-test
   (:require [clojure.test :refer :all]
-            [wolley.util.validators :refer :all]))
+            [amazestats.util.validators :refer :all]))
 
 (def too-short-alias "ei")
 (def too-long-alias "uinsduasndouiasndaoisdaoiasndaosidnasoidnaoidnsaidsi")

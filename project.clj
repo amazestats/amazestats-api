@@ -1,4 +1,4 @@
-(defproject wolley "0.1.0-SNAPSHOT"
+(defproject amazestats "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
@@ -15,8 +15,8 @@
                  [ring/ring-json "0.4.0"]]
   :plugins [[lein-ring "0.12.5"]
             [lein-environ "1.1.0"]]
-  :ring {:handler wolley.main/handler
+  :ring {:handler amazestats.main/handler
          :port 8000
          :open-browser? false}
   :profiles {:uberjar {:aot :all
-                       :uberjar-name "wolley"}})
+                       :uberjar-name "amazestats"}})

@@ -1,9 +1,9 @@
-(ns wolley.handlers (:require [clojure.tools.logging :as log]
+(ns amazestats.handlers (:require [clojure.tools.logging :as log]
             [clojure.string :as string]
             [ring.util.response :refer [bad-request created not-found]]
-            [wolley.database :as db]
-            [wolley.util.response :refer [conflict internal-error ok]]
-            [wolley.util.validators :refer [valid-alias?]]))
+            [amazestats.database :as db]
+            [amazestats.util.response :refer [conflict internal-error ok]]
+            [amazestats.util.validators :refer [valid-alias?]]))
 
 (defn get-users
   [request]

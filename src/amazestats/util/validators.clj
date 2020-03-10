@@ -1,4 +1,4 @@
-(ns wolley.util.validators)
+(ns amazestats.util.validators)
 
 (defn valid-alias?  [alias]
   (and (string? alias)

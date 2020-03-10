@@ -25,7 +25,7 @@ services:
       POSTGRES_DB: $POSTGRES_DB
     volumes:
       # Persist data when container is shut down.
-      - /var/opt/wolley-data:/var/lib/postgresql/data
+      - /var/opt/amazestats-data:/var/lib/postgresql/data
 
       # Scripts found in `/docker-entrypoint-initdb.d/` are executed once the
       # postgres data volume is empty.

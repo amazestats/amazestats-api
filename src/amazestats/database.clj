@@ -1,8 +1,8 @@
-(ns wolley.database
+(ns amazestats.database
   (:require [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
-            [wolley.util.parse :refer [join]]))
+            [amazestats.util.parse :refer [join]]))
 
 (def db-spec {:dbtype "postgresql"
               :host "database"

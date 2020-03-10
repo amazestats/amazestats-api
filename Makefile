@@ -28,4 +28,4 @@ db-init:
 	psql -d ${POSTGRES_DB} -U ${POSTGRES_USER} -h localhost -f resources/sql/schema.sql
 
 db-drop: clean
-	rm -rf /var/opt/wolley-data
+	rm -rf /var/opt/amazestats-data

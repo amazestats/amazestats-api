@@ -1,11 +1,11 @@
-(ns wolley.routes
+(ns amazestats.routes
   (:require [clojure.tools.logging :as log]
             [compojure.core :refer :all]
             [ring.middleware.cors :refer [wrap-cors]]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.resource :refer [wrap-resource]]
-            [wolley.handlers :refer [create-division!
+            [amazestats.handlers :refer [create-division!
                                      create-team!
                                      create-user!
                                      get-division-by-id
@@ -14,7 +14,7 @@
                                      get-teams
                                      get-user
                                      get-users]]
-            [wolley.middleware :refer [wrap-content-type]]))
+            [amazestats.middleware :refer [wrap-content-type]]))
 
 (defroutes api-routes
   (context "/api" []

@@ -1,44 +1,48 @@
 # wolley
 
-FIXME: description
+## Installation & Execution
 
-## Installation
+### Requirements
 
-Download from http://example.com/FIXME.
+To successfully run the service some environment variables must be provided.
+They need to be provided both in the *profiles.clj* of the project root,
+and also as environment variables.
 
-## Usage
+#### Required Environemnt Variables
 
-FIXME: explanation
+* POSTGRES_DB
+* POSTGRES_USER
+* POSTGRES_PASSWORD
 
-    $ java -jar wolley-0.1.0-standalone.jar [args]
+The environment variables are most easily set in the *.env* -file in the root
+of the project.
 
-## Options
+```bash
+POSTGRES_USER=dbuser
+POSTGRES_PASSWORD=dbpass
+POSTGRES_DB=dbname
+```
 
-FIXME: listing of options this app accepts.
+#### Example
 
-## Examples
+```clojure
+;; Example profiles.clj
+{:dev {:env {:postgres-db "dbname"
+             :postgres-user "dbuser"
+             :postgres-password "dbpass"}}}
+``` 
 
-...
+### Deployment
 
-### Bugs
+The easiest way to deploy the service is to use docker-compose.
 
-...
+```bash
+docker-compose up -d # starts required services
+docker-compose logs -f dev # shows the logs for dev service continuously
+```
 
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2020 FIXME
-
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+These options are availalbe in a Makefile for easy execution.
+The same commands could be ran by:
+```bash
+make deploy server-logs
+```

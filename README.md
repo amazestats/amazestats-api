@@ -1,5 +1,12 @@
 # amazestats
 
+## API Specification
+
+The current API specification can be found at
+[http://localhost:8080/] once the service is deployed.
+
+The yaml can also be directly inspected in *resources/public/openapi/spec.yml*.
+
 ## Installation & Execution
 
 ### Requirements

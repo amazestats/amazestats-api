@@ -1,3 +1,6 @@
+INSERT INTO volley_users (alias) VALUES ('emini');
+INSERT INTO volley_users (alias) VALUES ('jockeboi');
+
 INSERT INTO divisions (name, key) VALUES ('Allsvenskan', 'allsvenskan');
 INSERT INTO divisions (name, key) VALUES ('Superettan', 'superettan');
 

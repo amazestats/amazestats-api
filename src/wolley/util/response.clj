@@ -5,6 +5,11 @@
   {:status 200
    :body body})
 
+(defn conflict
+  [body]
+  {:status 409
+   :body body})
+
 (defn internal-error
   []
   {:status 500

@@ -10,6 +10,10 @@
               :user (env :postgres-user)
               :password (env :postgres-password)})
 
+(defn get-users [] nil)
+(defn get-user [id] nil)
+(defn create-user! [alias] nil)
+
 (defn get-division-by-id
   [id]
   (first

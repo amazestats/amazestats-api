@@ -7,10 +7,13 @@
             [ring.middleware.resource :refer [wrap-resource]]
             [wolley.handlers :refer [create-division!
                                      create-team!
+                                     create-user!
                                      get-division-by-id
                                      get-divisions
                                      get-matches
-                                     get-teams]]
+                                     get-teams
+                                     get-user
+                                     get-users]]
             [wolley.middleware :refer [wrap-content-type]]))
 
 (defroutes api-routes
@@ -23,7 +26,11 @@
                     (GET "/" request (get-matches request)))
            (context "/teams" []
                     (GET "/" request (get-teams request))
-                    (POST "/" request (create-team! request)))))
+                    (POST "/" request (create-team! request)))
+           (context "/users" []
+                    (GET "/" request (get-users request))
+                    (POST "/" request (create-user! request))
+                    (GET "/:id" [id] (get-user id)))))
 
 
 ;; Apply middleware to accept/send JSON data

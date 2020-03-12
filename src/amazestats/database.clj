@@ -6,32 +6,35 @@
             [jdbc.pool.c3p0 :as pool]
             [amazestats.util.parse :refer [join]]))
 
-(def db-url (env :jdbc-database-url))
+(def db-uri
+  (let [db-url (env :jdbc-database-url)]
+    (if (not (nil? db-url))
+      (java.net.URI. db-url))))
 
 (def user-and-password
-  (if (not (nil? db-url))
-    (if (not (nil? (.getUserInfo db-url)))
-      (clojure.string/split (.getUserInfo db-url) #":"))))
+  (if (not (nil? db-uri))
+    (if (not (nil? (.getUserInfo db-uri)))
+      (clojure.string/split (.getUserInfo db-uri) #":"))))
 
-(defn generate-spec-from-url []
+(defn generate-spec-from-uri []
   (pool/make-datasource-spec
     {:classname "org.postgresql.Driver"
      :subprotocol "postgresql"
      :user (get user-and-password 0)
      :password (get user-and-password 1)
      :subname
-     (if (= -1 (.getPort db-url))
+     (if (= -1 (.getPort db-uri))
        (format "//%s%s"
-               (.getHost db-url)
-               (.getPath db-url))
+               (.getHost db-uri)
+               (.getPath db-uri))
        (format "//%s:%s%s"
-               (.getHost db-url)
-               (.getPort db-url)
-               (.getPath db-url)))}))
+               (.getHost db-uri)
+               (.getPort db-uri)
+               (.getPath db-uri)))}))
 
 (def db-spec
-  (if (not (nil? db-url))
-    (generate-spec-from-url)
+  (if (not (nil? db-uri))
+    (generate-spec-from-uri)
     {:dbtype "postgresql"
       :host "database"
       :dbname (env :postgres-db)

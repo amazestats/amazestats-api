@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -jar target/amazestats.jar
+web: lein ring uberjar && java $JVM_OPTS -jar target/amazestats.jar

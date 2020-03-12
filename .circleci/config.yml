@@ -4,8 +4,8 @@ workflows:
     jobs:
       - build
       - deploy:
-        requires:
-          - build
+          requires:
+            - build
 orbs:
   heroku: circleci/heroku@1.0.1
 jobs:

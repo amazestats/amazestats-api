@@ -21,4 +21,4 @@
          :port 8000
          :open-browser? false}
   :profiles {:uberjar {:aot :all
-                       :uberjar-name "amazestats"}})
+                       :uberjar-name "amazestats.jar"}})

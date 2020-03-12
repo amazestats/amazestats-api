@@ -6,4 +6,4 @@ WORKDIR /usr/src/app
 
 RUN lein ring uberjar
 
-CMD ["java", "-jar", "target/amazestats"]
+CMD ["java", "-jar", "target/amazestats.jar"]

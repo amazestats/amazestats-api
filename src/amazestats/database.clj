@@ -1,14 +1,42 @@
 (ns amazestats.database
+  (:import com.mchange.v2.c3p0.ComboPooledDataSource)
   (:require [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
+            [jdbc.pool.c3p0 :as pool]
             [amazestats.util.parse :refer [join]]))
 
-(def db-spec {:dbtype "postgresql"
-              :host "database"
-              :dbname (env :postgres-db)
-              :user (env :postgres-user)
-              :password (env :postgres-password)})
+(def db-url (env :jdbc-database-url))
+
+(def user-and-password
+  (if (not (nil? db-url))
+    (if (not (nil? (.getUserInfo db-url)))
+      (clojure.string/split (.getUserInfo db-url) #":"))))
+
+(defn generate-spec-from-url []
+  (pool/make-datasource-spec
+    {:classname "org.postgresql.Driver"
+     :subprotocol "postgresql"
+     :user (get user-and-password 0)
+     :password (get user-and-password 1)
+     :subname
+     (if (= -1 (.getPort db-url))
+       (format "//%s%s"
+               (.getHost db-url)
+               (.getPath db-url))
+       (format "//%s:%s%s"
+               (.getHost db-url)
+               (.getPort db-url)
+               (.getPath db-url)))}))
+
+(def db-spec
+  (if (not (nil? db-url))
+    (generate-spec-from-url)
+    {:dbtype "postgresql"
+      :host "database"
+      :dbname (env :postgres-db)
+      :user (env :postgres-user)
+      :password (env :postgres-password)}))
 
 (defn get-users [] nil)
 (defn get-user [id] nil)

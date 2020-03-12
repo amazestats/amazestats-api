@@ -1,9 +1,11 @@
 version: 2.1
 workflows:
-  heroku_deploy:
+  build-and-deploy:
     jobs:
       - build
-      - deploy
+      - deploy:
+        requires:
+          - build
 orbs:
   heroku: circleci/heroku@1.0.1
 jobs:

@@ -1,6 +1,6 @@
 version: "3"
 services:
-  dev:
+  web:
     build: .
     environment:
       POSTGRES_USER: $POSTGRES_USER

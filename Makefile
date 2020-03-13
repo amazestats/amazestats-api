@@ -16,7 +16,7 @@ clean:
 	rm -rf target/
 
 server-logs:
-	docker-compose logs -f dev
+	docker-compose logs -f web
 
 db-logs:
 	docker-compose logs -f postgres

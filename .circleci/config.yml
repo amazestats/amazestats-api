@@ -11,6 +11,7 @@ workflows:
               only: sequential-branch-filter
 orbs:
   heroku: circleci/heroku@1.0.1
+  clj-kondo: marcomorain/clj-kondo@0.2.0
 jobs:
   build:
     docker:
@@ -45,6 +46,10 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "project.clj" }}
+
+      - run:
+          name: Lint
+          command: clj-kondo --lint .
 
       # run tests!
       - run: lein test

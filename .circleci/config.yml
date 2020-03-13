@@ -3,6 +3,7 @@ workflows:
   build-and-deploy:
     jobs:
       - build
+      - lint
       - deploy:
           requires:
             - build
@@ -47,12 +48,17 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "project.clj" }}
 
+      # run tests!
+      - run: lein test
+
+  lint:
+    docker:
+      - image: borkdude/clj-kondo:2019.05.27-alpha-SNAPSHOT
+    steps:
+      - checkout
       - run:
           name: Lint
           command: clj-kondo --lint .
-
-      # run tests!
-      - run: lein test
 
   deploy:
     executor: heroku/default

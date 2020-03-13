@@ -6,6 +6,9 @@ workflows:
       - deploy:
           requires:
             - build
+          filters:
+            branches:
+              only: sequential-branch-filter
 orbs:
   heroku: circleci/heroku@1.0.1
 jobs:

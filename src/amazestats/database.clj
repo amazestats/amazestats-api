@@ -41,9 +41,28 @@
      :user (env :postgres-user)
      :password (env :postgres-password)}))
 
-(defn get-users [] nil)
-(defn get-user [id] nil)
-(defn create-user! [alias] nil)
+(defn get-users []
+  (try
+    (jdbc/query db-spec ["SELECT * FROM amaze_users"])
+    (catch org.postgresql.util.PSQLException e
+      (log/error e "Failed to get users.")
+      nil)))
+
+(defn get-user [id]
+  (first
+    (try
+      (jdbc/query db-spec ["SELECT * FROM amaze_users WHERE id = ?" id])
+      (catch org.postgresql.util.PSQLException e
+        (log/error "Failed to get user:" id)
+        nil))))
+
+(defn create-user! [alias]
+  (first
+    (try
+      (jdbc/insert! db-spec :amaze-users {:alias alias})
+      (catch org.postgresql.util.PSQLException e
+        (log/error e "Failed to create team:" alias)
+        nil))))
 
 (defn get-division-by-id
   [id]

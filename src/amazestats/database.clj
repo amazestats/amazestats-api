@@ -7,7 +7,7 @@
             [amazestats.util.parse :refer [join]]))
 
 (def db-uri
-  (let [db-url (env :jdbc-database-url)]
+  (let [db-url (env :database-url)]
     (if (not (nil? db-url))
       (java.net.URI. db-url))))
 
@@ -36,10 +36,10 @@
   (if (not (nil? db-uri))
     (generate-spec-from-uri)
     {:dbtype "postgresql"
-      :host "database"
-      :dbname (env :postgres-db)
-      :user (env :postgres-user)
-      :password (env :postgres-password)}))
+     :host "database"
+     :dbname (env :postgres-db)
+     :user (env :postgres-user)
+     :password (env :postgres-password)}))
 
 (defn get-users [] nil)
 (defn get-user [id] nil)

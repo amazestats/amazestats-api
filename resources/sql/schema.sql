@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS amaze_users(
   id SERIAL PRIMARY KEY,
-  alias VARCHAR(50) UNIQUE
+  alias VARCHAR(50) UNIQUE,
+  password VARCHAR(128)
 );
 
 CREATE TABLE IF NOT EXISTS divisions(

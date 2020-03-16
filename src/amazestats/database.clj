@@ -56,10 +56,10 @@
         (log/error "Failed to get user:" id)
         nil))))
 
-(defn create-user! [alias]
+(defn create-user! [alias password]
   (first
     (try
-      (jdbc/insert! db-spec :amaze-users {:alias alias})
+      (jdbc/insert! db-spec :amaze-users {:alias alias :password password})
       (catch org.postgresql.util.PSQLException e
         (log/error e "Failed to create team:" alias)
         nil))))

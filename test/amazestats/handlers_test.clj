@@ -3,6 +3,8 @@
             [amazestats.handlers :refer :all]
             [amazestats.database :as db]))
 
+(def valid-password "somethingcool")
+
 (deftest get-users-test
   (testing "200 Empty list on empty database"
     (with-redefs [db/get-users (fn [] ())]
@@ -31,7 +33,7 @@
                     (get-in response [:body :message])))))))
 
   (testing "400 when ID is bad (non-int)"
-    (with-redefs [db/get-user (fn [id] (is false))] ;; we should not call db
+    (with-redefs [db/get-user (fn [id] nil)]
       (let [response (get-user "femton")]
         (is (and (= 400 (:status response))
                  (= "Invalid ID."
@@ -39,14 +41,14 @@
 
 (deftest create-user-test
   (testing "400 when alias is missing"
-    (with-redefs [db/create-user! (fn [alias] (is false))] ;; should not be called
+    (with-redefs [db/create-user! (fn [alias password] nil)] 
       (let [response (create-user! {:body {}})]
         (is (and (= 400 (:status response))
-                 (= "Alias must be provided."
+                 (= "Alias is not valid."
                    (get-in response [:body :message])))))))
 
   (testing "400 when alias is too long"
-    (with-redefs [db/create-user! (fn [alias] nil)]
+    (with-redefs [db/create-user! (fn [alias password] nil)]
       (let [response
             (create-user!
               {:body
@@ -56,21 +58,42 @@
                     (get-in response [:body :message])))))))
       
   (testing "400 when alias contains bad characters"
-    (with-redefs [db/create-user! (fn [alias] nil)]
-      (let [response (create-user! {:body {:alias "Flora Diamond"}})]
-        (is (and (= 400 (:status response))
-                 (= "Alias is not valid."
-                    (get-in response [:body :message])))))))
+    (with-redefs [db/create-user! (fn [alias password] nil)]
+      (let [response (create-user! {:body {:alias "Flora Diamond"
+                                           :password valid-password}})]
+        (is (= 400 (:status response)))
+        (is (= "Alias is not valid." 
+               (get-in response [:body :message]))))))
 
   (testing "409 when alias is already used"
-    (with-redefs [db/create-user! (fn [alias] nil)]
+    (with-redefs [db/create-user! (fn [alias password] nil)]
+      (let [response (create-user! {:body {:alias "emini"
+                                           :password valid-password}})]
+        (is (= 409 (:status response)))
+        (is (= "Alias is already in use."
+               (get-in response [:body :message]))))))
+
+  (testing "400 When password is too short"
+    (with-redefs [db/create-user! (fn [alias password] nil)]
+      (let [response (create-user! {:body {:alias "emini"
+                                           :password "tooshor"}})]
+        (is (= 400 (:status response)))
+        (is (= "Password is not valid."
+               (get-in response [:body :message]))))))
+
+  (testing "400 When password is missing"
+    (with-redefs [db/create-user! (fn [alias password] nil)]
       (let [response (create-user! {:body {:alias "emini"}})]
-        (is (and (= 409 (:status response))
-                 (= "Alias is already in use."
-                    (get-in response [:body :message])))))))
+        (is (= 400 (:status response)))
+        (is (= "Password is not valid."
+               (get-in response [:body :message]))))))
 
   (testing "201 when correct input"
-    (with-redefs [db/create-user! (fn [alias] {:id 17 :alias alias})]
-      (let [response (create-user! {:body {:alias "emini"}})]
-        (is (and (= 201 (:status response))
-                 (= {"Location" "api/users/17"})))))))
+    (with-redefs [db/create-user! (fn [alias password] {:id 17
+                                                        :alias alias
+                                                        :password password})]
+      (let [response (create-user! {:body {:alias "emini"
+                                           :password valid-password}})]
+        (is (= 201 (:status response)))
+        (is (= "/api/users/17"
+               (get-in response [:headers "Location"])))))))

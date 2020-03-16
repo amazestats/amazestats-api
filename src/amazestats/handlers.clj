@@ -1,9 +1,10 @@
-(ns amazestats.handlers (:require [clojure.tools.logging :as log]
+(ns amazestats.handlers
+  (:require [clojure.tools.logging :as log]
             [clojure.string :as string]
             [ring.util.response :refer [bad-request created not-found]]
             [amazestats.database :as db]
             [amazestats.util.response :refer [conflict internal-error ok]]
-            [amazestats.util.validators :refer [valid-alias?]]))
+            [amazestats.util.validators :refer [valid-alias? valid-password?]]))
 
 (defn get-users
   [request]
@@ -19,12 +20,16 @@
         (not-found {:message "User does not exist."})))))
 
 (defn create-user! [request]
-  (let [user-alias (get-in request [:body :alias])]
-    (if (nil? user-alias)
-      (bad-request {:message "Alias must be provided."})
-      (if (not (valid-alias? user-alias))
-        (bad-request {:message "Alias is not valid."})
-        (let [user (db/create-user! user-alias)]
+  (let [user-alias (get-in request [:body :alias])
+        password (get-in request [:body :password])]
+
+    (if (not (valid-alias? user-alias))
+      (bad-request {:message "Alias is not valid."})
+
+      (if (not (valid-password? password))
+        (bad-request {:message "Password is not valid."})
+
+        (let [user (db/create-user! user-alias password)]
           (if (nil? user)
             (conflict {:message "Alias is already in use."})
             (created (str "/api/users/" (:id user)))))))))

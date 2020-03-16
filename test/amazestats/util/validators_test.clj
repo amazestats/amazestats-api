@@ -27,3 +27,16 @@
 
   (testing "Alias is fine."
     (is (= true (valid-alias? "emini")))))
+
+(def too-short-password "seven88")
+
+(deftest valid-password-test
+
+  (testing "Password is too short."
+    (is (= false (valid-password? too-short-password))))
+
+  (testing "Password is not a string."
+    (is (= false (valid-password? {:stuff "stuff"}))))
+
+  (testing "Passowrd is OK."
+    (is (= true (valid-password? "longerpasswordhigherentropy")))))

@@ -1,16 +1,26 @@
 (ns amazestats.handlers
-  (:require [clojure.tools.logging :as log]
-            [clojure.string :as string]
+  (:require [clojure.string :as string]
             [ring.util.response :refer [bad-request created not-found]]
+            [amazestats.authentication :as auth]
             [amazestats.database :as db]
-            [amazestats.util.response :refer [conflict internal-error ok]]
+            [amazestats.util.response :refer [conflict ok]]
             [amazestats.util.validators :refer [valid-alias? valid-password?]]))
 
-(defn get-users
+(defn get-token
+  "Create a response with a newly generated authentication token."
   [request]
+  {:status 200
+   :body {:token (auth/create-token
+                  (get-in request [:identity :user-id]))}})
+
+(defn get-users
+  "Create response with list of users."
+  [_request]
   (ok {:users (db/get-users)}))
 
-(defn get-user [id]
+(defn get-user
+  "Retrieve specific user by its user ID."
+  [id]
   (if (not (integer? id)) ;; This check may or may not be unnecessary
                           ;; Might want to check what the database does
     (bad-request {:message "Invalid ID."})
@@ -19,7 +29,12 @@
         (ok {:user (db/get-user id)})
         (not-found {:message "User does not exist."})))))
 
-(defn create-user! [request]
+(defn create-user!
+  "Create and persist new user. The request must include alias and password, and
+   the alias cannot be in use. Responds with 201 upon successful user creation,
+   409 if the alias is already in use or 400 if the given parameters are not
+   valid."
+  [request]
   (let [user-alias (get-in request [:body :alias])
         password (get-in request [:body :password])]
 
@@ -41,17 +56,17 @@
 (defn create-key
   [name]
   (string/replace
-    (string/replace
-      (string/lower-case name)
-      " " "-")
-    "_" "-"))
+   (string/replace
+    (string/lower-case name)
+    " " "-")
+   "_" "-"))
 
 (defn get-division
   [division]
   (let [division-teams (filter-division
-                         (db/find-teams-by-division-id (:id division)))
+                        (db/find-teams-by-division-id (:id division)))
         division-matches (filter-division
-                           (db/find-matches-by-division (:id division)))]
+                          (db/find-matches-by-division (:id division)))]
     (ok {:division (assoc division
                           :teams division-teams
                           :matches division-matches)})))
@@ -134,4 +149,4 @@
         ;; If we are not given either teams or division we have a too broad
         ;; search, as the resulting list may become large.
         {:status 400
-          :body {:message "Either team or division must be given."}}))))
+         :body {:message "Either team or division must be given."}}))))

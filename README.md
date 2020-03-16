@@ -3,7 +3,8 @@
 ## API Specification
 
 The current API specification can be found at
-[http://localhost:8080/] once the service is deployed.
+[http://localhost:8080/](http://localhost:8080/)
+once the service is deployed.
 
 The yaml can also be directly inspected in *resources/public/openapi/spec.yml*.
 
@@ -20,6 +21,8 @@ and also as environment variables.
 * POSTGRES_DB
 * POSTGRES_USER
 * POSTGRES_PASSWORD
+* SECRET_KEY
+* TOKEN_EXPIRATION_PERIOD
 
 The environment variables are most easily set in the *.env* -file in the root
 of the project.
@@ -28,6 +31,8 @@ of the project.
 POSTGRES_USER=dbuser
 POSTGRES_PASSWORD=dbpass
 POSTGRES_DB=dbname
+SECRET_KEY=somethingsecret
+TOKEN_EXPIRATION_PERIOD=60
 ```
 
 #### Example
@@ -36,8 +41,10 @@ POSTGRES_DB=dbname
 ;; Example profiles.clj
 {:dev {:env {:postgres-db "dbname"
              :postgres-user "dbuser"
-             :postgres-password "dbpass"}}}
-``` 
+             :postgres-password "dbpass"
+             :secret-key "somethingsecret"
+             :token-expiration-period 60}}}
+```
 
 ### Deployment
 

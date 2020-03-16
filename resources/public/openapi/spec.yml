@@ -5,16 +5,86 @@ info:
   version: 0.1.0
 
 tags:
+   - name: auth
+     description: Operations related to authentication and authorization
    - name: divisions
      description: Operations on divisions
    - name: teams
      description: Operations on teams
+   - name: users
+     description: Operations on users
 
 servers:
   - url: http://localhost/api
     description: Development Server
 
 paths:
+  /users:
+    get:
+      tags: [users]
+      summary: Get all users
+      responses:
+        200:
+          description: Successfully retrieved all users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+    post:
+      tags: [auth, users]
+      summary: Create new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        201:
+          description: Successfully created user.
+        400:
+          description: Invalid parameters.
+        409:
+          description: User already exists.
+
+
+  /users/{id}:
+    get:
+      tags: [users]
+      summary: Get specific user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Numeric ID of the user.
+      responses:
+        200:
+          description: Successfully retrieved user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: User does not exist.
+
+  /token:
+    post:
+      tags: [auth]
+      summary: Create new access token
+      security:
+        - basic: []
+      responses:
+        200:
+          description: Successfully generated new token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        401:
+          description: User could not be authenticated.
+
   /divisions:
     get:
       tags: [divisions]
@@ -47,6 +117,8 @@ paths:
     post:
       tags: [divisions]
       summary: Create new division
+      security:
+        - bearer: []
       requestBody:
         required: true
         content:
@@ -104,6 +176,8 @@ paths:
     post:
       tags: [teams]
       summary: Create new team
+      security:
+        - bearer: []
       requestBody:
         required: true
         content:
@@ -148,7 +222,43 @@ paths:
           description: Failed to provide neccessary query parameters.
 
 components:
+  securitySchemes:
+    basic:
+      type: http
+      scheme: basic
+
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
+    User:
+      type: object
+      required:
+        - alias
+        - password
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        alias:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+
+    Users:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+
     Set:
       type: object
       properties:

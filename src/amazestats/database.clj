@@ -1,6 +1,7 @@
 (ns amazestats.database
   (:import com.mchange.v2.c3p0.ComboPooledDataSource)
-  (:require [clojure.java.jdbc :as jdbc]
+  (:require [buddy.hashers :as hasher]
+            [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
             [jdbc.pool.c3p0 :as pool]
@@ -56,12 +57,22 @@
         (log/error "Failed to get user:" id)
         nil))))
 
+(defn get-user-by-alias
+  [alias]
+  (first
+    (try
+      (jdbc/query db-spec ["SELECT * FROM amaze_users WHERE alias = ?" alias])
+      (catch org.postgresql.util.PSQLException e
+        (log/error "Failed to get user:" alias)
+        nil))))
+
 (defn create-user! [alias password]
   (first
     (try
-      (jdbc/insert! db-spec :amaze-users {:alias alias :password password})
+      (jdbc/insert! db-spec :amaze_users {:alias alias
+                                          :password (hasher/derive password)})
       (catch org.postgresql.util.PSQLException e
-        (log/error e "Failed to create team:" alias)
+        (log/error e "Failed to create user:" alias)
         nil))))
 
 (defn get-division-by-id

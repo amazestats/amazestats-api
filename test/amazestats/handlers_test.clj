@@ -20,20 +20,20 @@
              (get-users nil))))))
 
 (deftest get-user-test
-  (testing "200 correct user data", 
+  (testing "200 correct user data"
     (with-redefs [db/get-user (fn [id] {:id id :alias "emini"})]
       (is (= {:status 200
               :body {:user {:id 99 :alias "emini"}}}
              (get-user 99)))))
   (testing "404 when user does not exist"
-    (with-redefs [db/get-user (fn [id] nil)]
+    (with-redefs [db/get-user (fn [_id] nil)]
       (let [response (get-user 1000)]
         (is (and (= 404 (:status response))
                  (= "User does not exist."
                     (get-in response [:body :message])))))))
 
   (testing "400 when ID is bad (non-int)"
-    (with-redefs [db/get-user (fn [id] nil)]
+    (with-redefs [db/get-user (fn [_id] nil)]
       (let [response (get-user "femton")]
         (is (and (= 400 (:status response))
                  (= "Invalid ID."
@@ -41,32 +41,32 @@
 
 (deftest create-user-test
   (testing "400 when alias is missing"
-    (with-redefs [db/create-user! (fn [alias password] nil)] 
+    (with-redefs [db/create-user! (fn [_alias _password] nil)]
       (let [response (create-user! {:body {}})]
         (is (and (= 400 (:status response))
                  (= "Alias is not valid."
-                   (get-in response [:body :message])))))))
+                    (get-in response [:body :message])))))))
 
   (testing "400 when alias is too long"
-    (with-redefs [db/create-user! (fn [alias password] nil)]
+    (with-redefs [db/create-user! (fn [_alias _password] nil)]
       (let [response
             (create-user!
-              {:body
-               {:alias "2139129391239219312949125821491298128999999999999999"}})]
+             {:body
+              {:alias "2139129391239219312949125821491298128999999999999999"}})]
         (is (and (= 400 (:status response))
                  (= "Alias is not valid."
                     (get-in response [:body :message])))))))
-      
+
   (testing "400 when alias contains bad characters"
-    (with-redefs [db/create-user! (fn [alias password] nil)]
+    (with-redefs [db/create-user! (fn [_alias _password] nil)]
       (let [response (create-user! {:body {:alias "Flora Diamond"
                                            :password valid-password}})]
         (is (= 400 (:status response)))
-        (is (= "Alias is not valid." 
+        (is (= "Alias is not valid."
                (get-in response [:body :message]))))))
 
   (testing "409 when alias is already used"
-    (with-redefs [db/create-user! (fn [alias password] nil)]
+    (with-redefs [db/create-user! (fn [_alias _password] nil)]
       (let [response (create-user! {:body {:alias "emini"
                                            :password valid-password}})]
         (is (= 409 (:status response)))
@@ -74,7 +74,7 @@
                (get-in response [:body :message]))))))
 
   (testing "400 When password is too short"
-    (with-redefs [db/create-user! (fn [alias password] nil)]
+    (with-redefs [db/create-user! (fn [_alias _password] nil)]
       (let [response (create-user! {:body {:alias "emini"
                                            :password "tooshor"}})]
         (is (= 400 (:status response)))
@@ -82,7 +82,7 @@
                (get-in response [:body :message]))))))
 
   (testing "400 When password is missing"
-    (with-redefs [db/create-user! (fn [alias password] nil)]
+    (with-redefs [db/create-user! (fn [_alias _password] nil)]
       (let [response (create-user! {:body {:alias "emini"}})]
         (is (= 400 (:status response)))
         (is (= "Password is not valid."

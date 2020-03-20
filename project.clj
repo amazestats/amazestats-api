@@ -21,6 +21,7 @@
   :plugins [[lein-ring "0.12.5"]
             [lein-environ "1.1.0"]]
   :ring {:handler amazestats.main/handler
+         :host "0.0.0.0"
          :port 8000
          :open-browser? false}
   :profiles {:uberjar {:aot :all

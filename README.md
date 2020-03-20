@@ -52,7 +52,7 @@ The easiest way to deploy the service is to use docker-compose.
 
 ```bash
 docker-compose up -d # starts required services
-docker-compose logs -f dev # shows the logs for dev service continuously
+docker-compose logs -f web # shows the logs for dev service continuously
 ```
 
 These options are availalbe in a Makefile for easy execution.

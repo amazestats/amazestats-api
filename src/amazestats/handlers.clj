@@ -10,7 +10,8 @@
   "Create a response with a newly generated authentication token."
   [request]
   {:status 200
-   :body {:token (auth/create-token
+   :body {:id (get-in request [:identity :user-id])
+          :token (auth/create-token
                   (get-in request [:identity :user-id]))}})
 
 (defn get-users

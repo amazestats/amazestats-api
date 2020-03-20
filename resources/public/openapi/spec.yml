@@ -258,6 +258,8 @@ components:
       properties:
         token:
           type: string
+        id:
+          type: number
 
     Set:
       type: object

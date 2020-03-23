@@ -9,12 +9,14 @@
   (testing "200 Empty list on empty database"
     (with-redefs [db/get-users (fn [] ())]
       (is (= {:status 200
+              :headers {}
               :body {:users ()}}
              (get-users nil)))))
   (testing "200 Correct list of users returned"
     (with-redefs [db/get-users (fn [] ({:id 17 :alias "emini"}
                                        {:id 19 :alias "birk"}))]
       (is (= {:status 200
+              :headers {}
               :body {:users ({:id 17 :alias "emini"}
                              {:id 19 :alias "birk"})}}
              (get-users nil))))))
@@ -23,6 +25,7 @@
   (testing "200 correct user data"
     (with-redefs [db/get-user (fn [id] {:id id :alias "emini"})]
       (is (= {:status 200
+              :headers {}
               :body {:user {:id 99 :alias "emini"}}}
              (get-user 99)))))
   (testing "404 when user does not exist"

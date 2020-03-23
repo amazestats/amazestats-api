@@ -4,6 +4,18 @@ CREATE TABLE IF NOT EXISTS amaze_users(
   password VARCHAR(128)
 );
 
+CREATE TABLE IF NOT EXISTS competitions(
+  id SERIAL PRIMARY KEY,
+  key VARCHAR(50) UNIQUE,
+  name VARCHAR(50) UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS competition_admins(
+  admin INTEGER REFERENCES amaze_users(id),
+  competition INTEGER REFERENCES competitions(id),
+  PRIMARY KEY (admin, competition)
+);
+
 CREATE TABLE IF NOT EXISTS divisions(
   id SERIAL PRIMARY KEY,
   key VARCHAR(50) UNIQUE,

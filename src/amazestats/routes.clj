@@ -23,6 +23,8 @@
                                          get-token
                                          get-user
                                          get-users]]
+            [amazestats.handlers.competition :refer [get-competition
+                                                     get-competitions]]
             [amazestats.middleware :refer [wrap-content-type
                                            wrap-enforce-authentication]]))
 
@@ -50,6 +52,9 @@
 
 (defroutes public-routes
   (context "/api" []
+           (context "/competitions" []
+                    (GET "/" _ (get-competitions))
+                    (GET "/:id" [id] (get-competition id)))
     (context "/divisions" []
       (GET "/" request (get-divisions request))
       (GET "/:id" [id] (get-division-by-id id)))

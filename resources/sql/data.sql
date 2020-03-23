@@ -1,6 +1,11 @@
 INSERT INTO amaze_users (alias) VALUES ('emini');
 INSERT INTO amaze_users (alias) VALUES ('jockeboi');
 
+INSERT INTO competitions (name, key)
+VALUES ('Korpen Volleyboll', 'korpen-volleyboll');
+
+INSERT INTO competition_admins (admin, competition) VALUES ('1', '1');
+
 INSERT INTO divisions (name, key) VALUES ('Allsvenskan', 'allsvenskan');
 INSERT INTO divisions (name, key) VALUES ('Superettan', 'superettan');
 

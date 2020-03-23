@@ -1,4 +1,4 @@
-(defproject amazestats "0.1.0-SNAPSHOT"
+(defproject amazestats "0.2.0"
   :description "FIXME: write description"
   :url "http://amazestats-api.herokuapp.com"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"

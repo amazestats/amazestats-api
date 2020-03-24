@@ -1,5 +1,5 @@
 (ns amazestats.handlers.competition
-  (:require [amazestats.database.core :as db]
+  (:require [amazestats.database.competition :as db]
             [amazestats.util.response :refer [internal-error not-found ok]]))
 
 (defn get-competitions

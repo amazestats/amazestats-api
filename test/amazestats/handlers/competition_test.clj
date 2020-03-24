@@ -1,7 +1,7 @@
 (ns amazestats.handlers.competition-test
   (:require [clojure.test :refer :all]
             [amazestats.handlers.competition :refer :all]
-            [amazestats.database.core :as db]))
+            [amazestats.database.competition :as db]))
 
 (deftest get-competitions-test
 

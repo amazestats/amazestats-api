@@ -169,27 +169,3 @@
                (log/error e "Failed to get matches for division:" division-id)
                ()))]
     (attach-sets-to-match matches)))
-
-(defn get-competitions
-  "Create list of competitions from database.
-  If an error occurs in the database, `nil` is returned instead."
-  []
-  (try
-    (jdbc/query db-spec ["SELECT id, key, name FROM competitions"])
-    (catch org.postgresql.util.PSQLException e
-      (log/error "Failed to get competitions." e))))
-
-(defn get-competition
-  "Get a competition from the database by its `id`.
-  If the competition does not exist or if an error occurs, `nil` is returned."
-  [id]
-  (first
-    (try
-      (jdbc/query
-        db-spec
-        [(join "SELECT c.id, c.key, c.name"
-               "FROM competitions c"
-               "WHERE id = ?") id])
-      (catch org.postgresql.util.PSQLException e
-        (log/error "Failed to get competition with ID:" id e)))))
-

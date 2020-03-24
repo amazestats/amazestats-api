@@ -38,4 +38,3 @@
       (catch org.postgresql.util.PSQLException e
         (log/error "Failed to get user:" alias)
         nil))))
-

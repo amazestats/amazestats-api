@@ -1,6 +1,8 @@
 (ns amazestats.database.init
-  (:require [amazestats.database.core :refer [db-spec]]
-            [amazestats.database.user :as user-db]
+  (:require [amazestats.database
+             [core :refer [db-spec]]
+             [user :as user-db]
+             [competititon :as competition-db]]
             [clojure.java.io :as io]
             [clojure.java.jdbc :as jdbc]))
 
@@ -11,6 +13,12 @@
            [(slurp (io/resource "sql/initialized.sql"))]))))
 
 (defn init []
+  (log/debug "Creating database tables...")
   (jdbc/execute! db-spec [(slurp (io/resource "sql/schema.sql"))])
-  (user-db/create-user! "admin" "admin"))
 
+  (log/info "Creating initial competition and admin...")
+  (let [user (user-db/create-user! "admin" "admin")
+        competition (competition-db/create-competition! "Korpen Volleyboll"
+                                                        "korpen-volleyboll")]
+    (competition-db/add-competition-admin! (:id competition)
+                                           (:id user))))

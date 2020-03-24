@@ -1,7 +1,7 @@
 (ns amazestats.handlers-test
   (:require [clojure.test :refer :all]
             [amazestats.handlers :refer :all]
-            [amazestats.database :as db]))
+            [amazestats.database.user :as db]))
 
 (def valid-password "somethingcool")
 

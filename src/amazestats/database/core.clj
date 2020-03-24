@@ -1,8 +1,6 @@
-(ns amazestats.database
+(ns amazestats.database.core
   (:import com.mchange.v2.c3p0.ComboPooledDataSource)
-  (:require [buddy.hashers :as hasher]
-            [clojure.java.io :as io]
-            [clojure.java.jdbc :as jdbc]
+  (:require [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
             [jdbc.pool.c3p0 :as pool]
@@ -42,48 +40,6 @@
      :dbname (env :postgres-db)
      :user (env :postgres-user)
      :password (env :postgres-password)}))
-
-(defn initialized? []
-  (not (empty?
-         (jdbc/query
-           db-spec
-           [(slurp (io/resource "sql/initialized.sql"))]))))
-
-(defn init []
-  (jdbc/execute! db-spec [(slurp (io/resource "sql/schema.sql"))]))
-
-(defn get-users []
-  (try
-    (jdbc/query db-spec ["SELECT * FROM amaze_users"])
-    (catch org.postgresql.util.PSQLException e
-      (log/error e "Failed to get users.")
-      nil)))
-
-(defn get-user [id]
-  (first
-    (try
-      (jdbc/query db-spec ["SELECT * FROM amaze_users WHERE id = ?" id])
-      (catch org.postgresql.util.PSQLException e
-        (log/error "Failed to get user:" id)
-        nil))))
-
-(defn get-user-by-alias
-  [alias]
-  (first
-    (try
-      (jdbc/query db-spec ["SELECT * FROM amaze_users WHERE alias = ?" alias])
-      (catch org.postgresql.util.PSQLException e
-        (log/error "Failed to get user:" alias)
-        nil))))
-
-(defn create-user! [alias password]
-  (first
-    (try
-      (jdbc/insert! db-spec :amaze_users {:alias alias
-                                          :password (hasher/derive password)})
-      (catch org.postgresql.util.PSQLException e
-        (log/error e "Failed to create user:" alias)
-        nil))))
 
 (defn get-division-by-id
   [id]
@@ -231,7 +187,9 @@
     (try
       (jdbc/query
         db-spec
-        ["SELECT id, key, name FROM competitions WHERE id = ?" id])
+        [(join "SELECT c.id, c.key, c.name"
+               "FROM competitions c"
+               "WHERE id = ?") id])
       (catch org.postgresql.util.PSQLException e
         (log/error "Failed to get competition with ID:" id e)))))
 

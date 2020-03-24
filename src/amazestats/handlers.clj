@@ -2,7 +2,8 @@
   (:require [clojure.string :as string]
             [ring.util.response :refer [bad-request created not-found]]
             [amazestats.authentication :as auth]
-            [amazestats.database :as db]
+            [amazestats.database [core :as db]
+                                 [user :as user-db]]
             [amazestats.util.response :refer [conflict ok]]
             [amazestats.util.validators :refer [valid-alias? valid-password?]]))
 
@@ -17,7 +18,7 @@
 (defn get-users
   "Create response with list of users."
   [_request]
-  (ok {:users (db/get-users)}))
+  (ok {:users (user-db/get-users)}))
 
 (defn get-user
   "Retrieve specific user by its user ID."
@@ -25,9 +26,9 @@
   (if (not (integer? id)) ;; This check may or may not be unnecessary
                           ;; Might want to check what the database does
     (bad-request {:message "Invalid ID."})
-    (let [user (db/get-user id)]
+    (let [user (user-db/get-user id)]
       (if (not (nil? user))
-        (ok {:user (db/get-user id)})
+        (ok {:user (user-db/get-user id)})
         (not-found {:message "User does not exist."})))))
 
 (defn create-user!
@@ -45,7 +46,7 @@
       (if (not (valid-password? password))
         (bad-request {:message "Password is not valid."})
 
-        (let [user (db/create-user! user-alias password)]
+        (let [user (user-db/create-user! user-alias password)]
           (if (nil? user)
             (conflict {:message "Alias is already in use."})
             (created (str "/api/users/" (:id user)))))))))

@@ -4,7 +4,7 @@
             [buddy.sign.jwt :as jwt]
             [clj-time.core :as time]
             [environ.core :refer [env]]
-            [amazestats.database :as db]))
+            [amazestats.database.user :as db]))
 
 ;; Secret key used when generating tokens.
 (def secret-key (env :secret-key))

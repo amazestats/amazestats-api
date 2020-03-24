@@ -38,14 +38,14 @@
     (let [competition {:id 1
                        :key "korpen-volleyboll"
                        :name "Korpen Volleyboll"}]
-      (with-redefs [db/get-competition (fn [n] competition)]
+      (with-redefs [db/get-competition (fn [_] competition)]
         (is (= (get-competition "1")
                {:status 200
                 :headers {}
                 :body {:competition competition}})))))
 
   (testing "404 Competition does not exist"
-    (with-redefs [db/get-competition (fn [n] nil)]
+    (with-redefs [db/get-competition (fn [_] nil)]
       (is (= (get-competition "1")
              {:status 404
               :headers {}

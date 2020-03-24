@@ -5,7 +5,7 @@
             [clojure.tools.logging :as log]))
 
 (defn init []
-  (if-let [initialized (db/initialized?)]
+  (if (db/initialized?)
     (log/info "Skipping database initialization as databasea already exists.")
     (do (log/info "Initializing database...")
         (db/init))))

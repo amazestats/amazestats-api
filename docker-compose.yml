@@ -29,11 +29,6 @@ services:
       # Persist data when container is shut down.
       - /var/opt/amazestats-data:/var/lib/postgresql/data
 
-      # Scripts found in `/docker-entrypoint-initdb.d/` are executed once the
-      # postgres data volume is empty.
-      - ./resources/sql/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql
-      - ./resources/sql/data.sql:/docker-entrypoint-initdb.d/002-data.sql
-
   openapi:
     image: swaggerapi/swagger-ui
     ports:

@@ -1,6 +1,7 @@
 (ns amazestats.database
   (:import com.mchange.v2.c3p0.ComboPooledDataSource)
   (:require [buddy.hashers :as hasher]
+            [clojure.java.io :as io]
             [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
@@ -41,6 +42,15 @@
      :dbname (env :postgres-db)
      :user (env :postgres-user)
      :password (env :postgres-password)}))
+
+(defn initialized? []
+  (not (empty?
+         (jdbc/query
+           db-spec
+           [(slurp (io/resource "sql/initialized.sql"))]))))
+
+(defn init []
+  (jdbc/execute! db-spec [(slurp (io/resource "sql/schema.sql"))]))
 
 (defn get-users []
   (try

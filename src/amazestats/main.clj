@@ -6,7 +6,7 @@
 
 (defn init []
   (if (db/initialized?)
-    (log/info "Skipping database initialization as databasea already exists.")
+    (log/info "Skipping database initialization as database already exists.")
     (do (log/info "Initializing database...")
         (db/init))))
 

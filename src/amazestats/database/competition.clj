@@ -1,6 +1,5 @@
 (ns amazestats.database.competition
   (:require [amazestats.database.core :refer [db-spec]]
-            [buddy.hashers :as hasher]
             [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
             [amazestats.util.parse :refer [join]]))

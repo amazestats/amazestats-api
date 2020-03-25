@@ -25,7 +25,7 @@
                 :headers {}
                 :body {:competitions competitions}}))))))
 
-  (testing "500 Error occured in DB"
+  (testing "500 Error occurred in DB"
     (with-redefs [db/get-competitions (fn [] nil)]
       (is (= (get-competitions)
              {:status 500

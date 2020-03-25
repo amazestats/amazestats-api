@@ -40,17 +40,15 @@
 
 (defn add-competition-admin!
   "Add `user` as admin for `competition`.
-  Returns a map of the admin created on success, on error `nil`."
+  Returns a map of the admin created on success, or nil if the `user` already
+  is an admin in the `competition`."
   [competition user]
   (first
     (try (jdbc/insert! db-spec
                        :competition_admins
                        {:admin user
                         :competition competition})
-         (catch org.postgresql.util.PSQLException e
-           (log/error "Failed to add admin with ID" user
-                      "to competition with ID" competition "."
-                      e)))))
+         (catch org.postgresql.util.PSQLException _ nil))))
 
 (defn remove-competition-admin!
   "Remove `user` as admin for `competition`.

@@ -2,7 +2,8 @@
   (:require [amazestats.database
              [core :refer [db-spec]]
              [user :as user-db]
-             [competititon :as competition-db]]
+             [competition :as competition-db]]
+            [clojure.tools.logging :as log]
             [clojure.java.io :as io]
             [clojure.java.jdbc :as jdbc]))
 

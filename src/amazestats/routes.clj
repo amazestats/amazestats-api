@@ -31,8 +31,8 @@
 ;;; PRIVATE ROUTES
 
 ;; These routes are available to authenticated API consumers. Most routes will
-;; require a token based authentication (using JWT), whilst the token request
-;; e.g. will require basic authentication.
+;; require a token based authentication (using JWT), whilst the token request,
+;; for example, will require basic authentication.
 
 (defroutes basic-routes
   (context "/api" []

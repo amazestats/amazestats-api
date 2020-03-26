@@ -18,8 +18,17 @@ CREATE TABLE IF NOT EXISTS competition_admins(
 
 CREATE TABLE IF NOT EXISTS divisions(
   id SERIAL PRIMARY KEY,
-  key VARCHAR(50) UNIQUE,
-  name VARCHAR(50) UNIQUE
+  key VARCHAR(50),
+  name VARCHAR(50),
+  competition INTEGER REFERENCES competitions(id),
+  UNIQUE (key, competition),
+  UNIQUE (key, name)
+);
+
+CREATE TABLE IF NOT EXISTS division_admins(
+  admin INTEGER REFERENCES amaze_users(id),
+  division INTEGER REFERENCES divisions(id),
+  PRIMARY KEY (admin, division)
 );
 
 CREATE TABLE IF NOT EXISTS teams(

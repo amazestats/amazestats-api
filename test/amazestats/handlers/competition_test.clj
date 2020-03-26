@@ -3,11 +3,11 @@
             [amazestats.handlers.competition :refer :all]
             [amazestats.database.competition :as db]))
 
-(deftest get-competitions-test
+(deftest get-all-competitions-test
 
   (testing "200 No competitions exist"
-    (with-redefs [db/get-competitions (fn [] '())]
-      (is (= (get-competitions)
+    (with-redefs [db/get-all-competitions (fn [] '())]
+      (is (= (get-all-competitions)
              {:status 200
               :headers {}
               :body {:competitions '()}}))))
@@ -19,15 +19,15 @@
                          {:id 3
                           :key "korpen-innebandy"
                           :name "Korpen Innebandy"})]
-      (with-redefs [db/get-competitions (fn [] competitions)]
-        (is (= (get-competitions)
+      (with-redefs [db/get-all-competitions (fn [] competitions)]
+        (is (= (get-all-competitions)
                {:status 200
                 :headers {}
                 :body {:competitions competitions}}))))))
 
   (testing "500 Error occurred in DB"
-    (with-redefs [db/get-competitions (fn [] nil)]
-      (is (= (get-competitions)
+    (with-redefs [db/get-all-competitions (fn [] nil)]
+      (is (= (get-all-competitions)
              {:status 500
               :headers {}
               :body {:message "Internal server error"}}))))
@@ -38,15 +38,15 @@
     (let [competition {:id 1
                        :key "korpen-volleyboll"
                        :name "Korpen Volleyboll"}]
-      (with-redefs [db/get-competition (fn [_] competition)]
-        (is (= (get-competition "1")
+      (with-redefs [db/get-competition-by-id (fn [_] competition)]
+        (is (= (get-competition-by-id "1")
                {:status 200
                 :headers {}
                 :body {:competition competition}})))))
 
   (testing "404 Competition does not exist"
-    (with-redefs [db/get-competition (fn [_] nil)]
-      (is (= (get-competition "1")
+    (with-redefs [db/get-competition-by-id (fn [_] nil)]
+      (is (= (get-competition-by-id "1")
              {:status 404
               :headers {}
               :body {:message "Competition does not exist."}})))))

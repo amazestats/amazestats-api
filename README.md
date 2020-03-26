@@ -16,7 +16,7 @@ To successfully run the service some environment variables must be provided.
 They need to be provided both in the *profiles.clj* of the project root,
 and also as environment variables.
 
-#### Required Environemnt Variables
+#### Required Environment Variables
 
 * POSTGRES_DB
 * POSTGRES_USER

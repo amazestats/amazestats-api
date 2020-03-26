@@ -13,18 +13,25 @@
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.util.response :refer [not-found]]
             [amazestats.authentication :as auth]
-            [amazestats.handlers :refer [create-team!
-                                         create-user!
-                                         get-matches
-                                         get-teams
-                                         get-token
-                                         get-user
-                                         get-users]]
-            [amazestats.handlers.competition :refer [get-competition
-                                                     get-competitions]]
+            [amazestats.handlers :refer [get-token]]
+            [amazestats.handlers.competition :refer [get-all-competitions
+                                                     get-competition-by-id]]
             [amazestats.handlers.division :refer [create-division!
+                                                  find-divisions-by-competition
                                                   get-division-by-id
-                                                  get-divisions]]
+                                                  get-all-divisions]]
+            [amazestats.handlers.match :refer [find-matches-by-season
+                                               get-match-by-id]]
+            [amazestats.handlers.season :refer [find-seasons-by-division
+                                                get-season-by-id]]
+            [amazestats.handlers.team :refer [create-team!
+                                              find-teams-by-competition
+                                              find-teams-by-division
+                                              get-team-by-id
+                                              get-all-teams]]
+            [amazestats.handlers.user :refer [create-user!
+                                              get-user-by-id
+                                              get-all-users]]
             [amazestats.middleware :refer [wrap-content-type
                                            wrap-enforce-authentication]]))
 
@@ -40,10 +47,10 @@
 
 (defroutes token-routes
   (context "/api" []
-    (context "/teams" []
-      (POST "/" request (create-team! request)))
-    (context "/divisions" []
-      (POST "/" request (create-division! request)))))
+    (context "/competitions/:competition/teams" [competition]
+      (POST "/" request (create-team! competition request)))
+    (context "/competitions/:competition/divisions" [competition]
+      (POST "/" request (create-division! competition request)))))
 
 
 ;;; PUBLIC ROUTES
@@ -51,21 +58,40 @@
 ;; These routes are available to any API consumer.
 
 (defroutes public-routes
-  (context "/api" []
-           (context "/competitions" []
-                    (GET "/" _ (get-competitions))
-                    (GET "/:id" [id] (get-competition id)))
-    (context "/divisions" []
-      (GET "/" request (get-divisions request))
-      (GET "/:id" [id] (get-division-by-id id)))
-    (context "/matches" []
-      (GET "/" request (get-matches request)))
-    (context "/teams" []
-      (GET "/" request (get-teams request)))
-    (context "/users" []
-      (GET "/" request (get-users request))
-      (POST "/" request (create-user! request))
-      (GET "/:id" [id] (get-user id))))
+
+  (context "/api/competitions" []
+           (GET "/" _ (get-all-competitions))
+           (GET "/:id" [id] (get-competition-by-id id))
+           (GET "/:competition/divisions" [competition]
+                (find-divisions-by-competition competition))
+           (GET "/:competition/teams" [competition]
+                (find-teams-by-competition competition)))
+
+  (context "/api/divisions" []
+           (GET "/" _ (get-all-divisions))
+           (GET "/:id" [id] (get-division-by-id id))
+           (GET "/:division/teams" [division]
+                (find-teams-by-division division))
+           (GET "/:division/seasons" [division]
+                (find-seasons-by-division division)))
+
+  (context "/api/teams" []
+           (GET "/" _ (get-all-teams))
+           (GET "/:id" [id] (get-team-by-id id)))
+
+  (context "/api/seasons" []
+           (GET "/:id" [id] (get-season-by-id id))
+           (GET "/:season/matches" [season]
+                (find-matches-by-season season)))
+
+  (context "/api/matches" []
+           (GET "/:id" [id] (get-match-by-id id)))
+
+  (context "/api/users" []
+           (GET "/" _ (get-all-users))
+           (POST "/" req (create-user! req))
+           (GET "/:id" [id] (get-user-by-id id)))
+
   (route/not-found (not-found {:message "Resource does not exist."})))
 
 

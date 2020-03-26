@@ -1,4 +1,5 @@
 (ns amazestats.database.competition
+  (:import org.postgresql.util.PSQLException)
   (:require [amazestats.database.core :refer [db-spec]]
             [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
@@ -13,9 +14,9 @@
     (jdbc/insert! db-spec :competitions {:name competition-name
                                          :key competition-key})
     (catch org.postgresql.util.PSQLException e
-      (log/error "Failed to create competition:" competition-name))))
+      (log/error "Failed to create competition:" competition-name e))))
 
-(defn get-competitions
+(defn get-all-competitions
   "Create list of competitions from database.
   If an error occurs in the database, `nil` is returned instead."
   []
@@ -24,7 +25,7 @@
     (catch org.postgresql.util.PSQLException e
       (log/error "Failed to get competitions." e))))
 
-(defn get-competition
+(defn get-competition-by-id
   "Get a competition from the database by its `id`.
   If the competition does not exist or if an error occurs, `nil` is returned."
   [id]
@@ -37,6 +38,9 @@
                "WHERE id = ?") id])
       (catch org.postgresql.util.PSQLException e
         (log/error "Failed to get competition with ID:" id e)))))
+
+
+;;; ADMIN MANAGEMENT
 
 (defn add-competition-admin!
   "Add `user` as admin for `competition`.
@@ -82,3 +86,13 @@
        competition])
     (catch org.postgresql.util.PSQLException e
       (log/error "Failed to get admins for competition:" competition e))))
+
+(defn competition-admin?
+  ""
+  [competition user]
+  (try
+    (seq (jdbc/query db-spec [(join "SELECT admin"
+                                    "FROM competition_admins"
+                                    "WHERE competition = ? AND admin = ?")
+                              competition user]))
+    (catch org.postgresql.util.PSQLException e (log/error e))))

@@ -1,51 +1,57 @@
 (ns amazestats.handlers.division
-  (:require [ring.util.response :refer [bad-request created not-found]]
-            [amazestats.database.core :as core-db]
+  (:require [amazestats.database.competition :as competition-db]
             [amazestats.database.division :as db]
             [amazestats.util.core :refer [create-key]]
-            [amazestats.util.response :refer [ok]]))
-
-(defn filter-division
-  [col]
-  (map (fn [x] (dissoc x :division)) col))
-
-(defn get-division
-  [division]
-  (let [division-teams (filter-division
-                        (core-db/find-teams-by-division-id (:id division)))
-        division-matches (filter-division
-                          (core-db/find-matches-by-division (:id division)))]
-    (ok {:division (assoc division
-                          :teams division-teams
-                          :matches division-matches)})))
+            [amazestats.util.response :refer [bad-request
+                                              created
+                                              forbidden
+                                              internal-error
+                                              not-found
+                                              ok]]
+            [clojure.tools.logging :as log]))
 
 (defn get-division-by-id
   [id]
+  (log/info "Getting division by ID:" id)
   (let [division (db/get-division-by-id (Integer. id))]
-    (if (not (nil? division))
-      (get-division division)
-      (not-found "Division does not exist."))))
+    (if (nil? division)
+      (not-found "Division does not exist in competition.")
+      (ok {:division division}))))
 
-(defn find-division-by-key
-  [division-key]
-  (let [division (db/find-division-by-key division-key)]
-    (if (not (nil? division))
-      (get-division division)
-      (not-found "Division does not exist."))))
+(defn get-all-divisions
+  []
+  (let [divisions (db/get-all-divisions)]
+    (if (nil? divisions)
+      (internal-error)
+      (ok {:divisions divisions}))))
 
-(defn get-divisions
-  [request]
-  (let [division-key (get-in request [:params :key])]
-    (if (not (nil? division-key))
-      (find-division-by-key division-key)
-      (ok {:divisions (db/get-divisions)}))))
+(defn find-divisions-by-competition
+  [competition]
+  (log/info "Finding divisions in competition:" competition)
+  (let [competition (Integer. competition)
+        divisions (db/get-divisions-by-competition competition)]
+
+    ;; If the divisions list is empty we have to verify if the competition
+    ;; exists to decide whether to serve a 404 or 200 with empty list.
+    (if (and (empty? divisions)
+             (nil? (competition-db/get-competition-by-id competition)))
+      (not-found "Competition does not exist.")
+      (ok {:divisions divisions}))))
 
 (defn create-division!
-  [request]
-  (let [division-name (get-in request [:body :name])
-        division-key (create-key division-name)
-        division (db/create-division! division-name division-key)]
-    (if (not (nil? division))
-      (created (str "/api/divisions/" (:id division)))
-      (bad-request (str "Could not create division: " division-name)))))
+  [competition request]
+  (let [competition (Integer. competition)
+        admin? (competition-db/competition-admin?
+                 competition
+                 (get-in request [:identity :user-id]))]
+    (if-not admin?
+      (forbidden)
+      (let [division-name (get-in request [:body :name])
+            division-key (create-key division-name)
+            division (db/create-division! competition
+                                          division-name
+                                          division-key)]
+        (if (not (nil? division))
+          (created (str "/api/divisions/" (:id division)))
+          (bad-request (str "Could not create division: " division-name)))))))
 

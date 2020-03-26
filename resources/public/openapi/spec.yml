@@ -2,17 +2,18 @@ openapi: 3.0.0
 
 info:
   title: Volleyball Stats API
-  version: 0.2.0
+  version: 0.3.0
 
 tags:
    - name: auth
      description: Operations related to authentication and authorization
-   - name: divisions
-     description: Operations on divisions
-   - name: teams
-     description: Operations on teams
-   - name: users
-     description: Operations on users
+   - name: user
+   - name: competition
+   - name: division
+   - name: team
+   - name: season
+   - name: match
+
 
 servers:
   - url: http://localhost/api
@@ -21,7 +22,7 @@ servers:
 paths:
   /users:
     get:
-      tags: [users]
+      tags: [user]
       summary: Get all users
       responses:
         200:
@@ -31,7 +32,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Users'
     post:
-      tags: [auth, users]
+      tags: [auth, user]
       summary: Create new user
       requestBody:
         required: true
@@ -50,7 +51,7 @@ paths:
 
   /users/{id}:
     get:
-      tags: [users]
+      tags: [user]
       summary: Get specific user
       parameters:
         - in: path
@@ -121,35 +122,30 @@ paths:
 
   /divisions:
     get:
-      tags: [divisions]
-      summary: Get all divisions or fetch division by key
-      description: >
-        Can be used to either fetch all divisions or to find divisions by key.
-
-        Note that the key is unique for divisions and therefore a singular
-        return value is given when calling `/divisions?key=X` rather than the
-        list returned when the query parameter *key* is skipped.
+      tags: [division]
+      summary: Get all divisions
       parameters:
         - in: query
-          name: key
-          required: false
+          name: competition
+          required: true
           schema:
-            type: string
-          description: Fetch singular division by its key.
+            type: integer
+            example: 1
+          description: The ID of the competition to get divisions from.
       responses:
         200:
-          description: Successfully retrieved division/s.
+          description: Successfully retrieved divisions.
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/Divisions'
-                  - $ref: '#/components/schemas/Division'
+                $ref: '#/components/schemas/Divisions'
         400:
-          description: Failed to retrieve division/s.
+          description: Failed to retrieve divisions.
+        404:
+          description: Competition does not exist.
 
     post:
-      tags: [divisions]
+      tags: [division]
       summary: Create new division
       security:
         - bearer: []
@@ -167,7 +163,7 @@ paths:
 
   /divisions/{id}:
     get:
-      tags: [divisions]
+      tags: [division]
       summary: Get division by ID
       parameters:
         - in: path
@@ -188,15 +184,23 @@ paths:
 
   /teams:
     get:
-      tags: [teams]
-      summary: Get selection of teams
+      tags: [team]
+      summary: Get teams.
       parameters:
+        - in: query
+          name: competition
+          required: false
+          schema:
+            type: integer
+            example: 1
+          description: The ID of the competition to get teams from.
         - in: query
           name: division
           required: false
-          description: To limit search for teams by division.
           schema:
             type: integer
+            example: 1
+          description: The ID of the division to get the teams from.
       responses:
         200:
           description: Successfully retrieved teams.
@@ -204,56 +208,182 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Teams'
-        400:
-          description: Bad request.
+        404:
+          description: The competition, or division, does not exist.
 
-    post:
-      tags: [teams]
-      summary: Create new team
-      security:
-        - bearer: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Teams'
-      responses:
-        201:
-          description: Successfully created team.
-        400:
-          description: Failed to craete team.
-
-  /matches:
+  /teams/{id}:
     get:
-      tags: [matches]
-      summary: Get all matches for division or team
-      description: >
-        Get all matches for either a division or team.
-
-        Note that all matches cannot be fetched and that therefore, one of the
-        two query parameters (*division* or *team*) should be provided in order
-        to limit the search.
+      tags: [team]
+      summary: Get specific team.
       parameters:
-        - in: query
-          name: division
+        - in: path
+          name: id
+          required: true
           schema:
             type: integer
-          description: Numeric ID of division to get all matches for.
-        - in: query
-          name: team
-          schema:
-            type: integer
-          description: Numeric ID of team to get all matches for.
+            example: 17
+          description: The ID of the team to get.
       responses:
         200:
-          description: Successfully retrieved matches.
+          description: Successfully retrieved team.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        404:
+          description: The team does not exist.
+
+  /competitions/{competition}/teams:
+    get:
+      tags: [team]
+      summary: Get teams in competition.
+      parameters:
+        - in: path
+          name: competition
+          required: false
+          schema:
+            type: integer
+            example: 1
+          description: The ID of the competition to get teams from.
+      responses:
+        200:
+          description: Successfully retrieved teams.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teams'
+        404:
+          description: The competition does not exist.
+
+  /divisions/{division}/teams:
+    get:
+      tags: [team]
+      summary: Get teams in division.
+      parameters:
+        - in: path
+          name: division
+          required: false
+          schema:
+            type: integer
+            example: 1
+          description: The ID of the division to get teams from.
+      responses:
+        200:
+          description: Successfully retrieved teams.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teams'
+        404:
+          description: The division does not exist.
+
+
+  /competition/{competition}/divisions:
+    get:
+      tags: [division]
+      summary: Get all divisions
+      parameters:
+        - in: path
+          name: competition
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: The ID of the competition to get divisions from.
+      responses:
+        200:
+          description: Successfully retrieved divisions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Divisions'
+        400:
+          description: Failed to retrieve divisions.
+        404:
+          description: Competition does not exist.
+
+  /divisions/{division}/seasons:
+    get:
+      tags: [season]
+      summary: Get seasons
+      parameters:
+        - in: path
+          name: division
+          required: true
+          schema:
+            type: integer
+          description: The ID of the division the season belongs in.
+      responses:
+        200:
+          description: Successfully retrieved seasons.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seasons'
+        404:
+          description: Division does not exist.
+
+  /seasons/{id}:
+    get:
+      tags: [season]
+      summary: Get season by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Numeric ID of the season.
+      responses:
+        200:
+          description: Successfully retrieved season.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Season'
+        404:
+          description: Season does not exist.
+
+  /seasons/{season}/matches:
+    get:
+      tags: [match]
+      summary: Get all matches in season
+      parameters:
+        - in: path
+          name: season
+          required: true
+          schema:
+            type: integer
+          description: The ID of the season.
+      responses:
+        200:
+          description: Successfully fetched matches.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Matches'
-        400:
-          description: Failed to provide neccessary query parameters.
+        404:
+          description: Season does not exist.
+
+  /matches/{id}:
+    get:
+      tags: [match]
+      summary: Get match by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: The ID of the match.
+      responses:
+        200:
+          description: Successfully retrieved match.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+        404:
+          description: Match does not exist.
 
 components:
   securitySchemes:
@@ -339,7 +469,7 @@ components:
         id:
           type: integer
           readOnly: true
-        division:
+        season:
           type: integer
         home_team:
           type: integer
@@ -369,6 +499,11 @@ components:
           readOnly: true
         division:
           type: integer
+        competition:
+          type: integer
+        activated:
+          type: boolean
+          readOnly: true
 
     Teams:
       type: array
@@ -388,12 +523,35 @@ components:
         key:
           type: string
           readOnly: true
-        teams:
-          $ref: '#/components/schemas/Teams'
-        matches:
-          $ref: '#/components/schemas/Matches'
+        competition:
+          type: integer
 
     Divisions:
       type: array
       items:
         $ref: '#/components/schemas/Division'
+
+    Season:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        key:
+          type: string
+          readOnly: true
+        division:
+          type: integer
+        competition:
+          type: integer
+
+    Seasons:
+      type: array
+      items:
+        $ref: '#/components/schemas/Season'
+
+

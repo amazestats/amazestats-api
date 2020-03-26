@@ -31,16 +31,28 @@ CREATE TABLE IF NOT EXISTS division_admins(
   PRIMARY KEY (admin, division)
 );
 
+CREATE TABLE IF NOT EXISTS seasons(
+  id SERIAL PRIMARY KEY,
+  key VARCHAR(50),
+  name VARCHAR(50),
+  division INTEGER REFERENCES divisions(id),
+  UNIQUE (key, division)
+);
+
 CREATE TABLE IF NOT EXISTS teams(
   id SERIAL PRIMARY KEY,
+  key VARCHAR(50),
+  name VARCHAR(50),
+  activated BOOLEAN NOT NULL DEFAULT FALSE,
+  competition INTEGER REFERENCES competitions(id) NOT NULL,
   division INTEGER REFERENCES divisions(id),
-  key VARCHAR(50) UNIQUE,
-  name VARCHAR(50) UNIQUE
+  UNIQUE (key, competition),
+  UNIQUE (name, competition)
 );
 
 CREATE TABLE IF NOT EXISTS matches(
   id SERIAL PRIMARY KEY,
-  division INTEGER REFERENCES divisions(id),
+  season INTEGER REFERENCES seasons(id),
   home_team INTEGER REFERENCES teams(id),
   away_Team INTEGER REFERENCES teams(id)
 );

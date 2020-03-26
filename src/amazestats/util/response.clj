@@ -1,4 +1,5 @@
-(ns amazestats.util.response)
+(ns amazestats.util.response
+  (:require [clojure.string]))
 
 ;;; Success
 
@@ -16,6 +17,12 @@
 
 ;;; Client Errors
 
+(defn bad-request
+  [message]
+  {:status 400
+   :headers {}
+   :body {:message message}})
+
 (defn unauthorized
   []
   {:status 401
@@ -29,16 +36,16 @@
    :body {:message "Forbidden"}})
 
 (defn not-found
-  [message]
+  [& message]
   {:status 404
    :headers {}
-   :body {:message message}})
+   :body {:message (str (clojure.string/join " " message))}})
 
 (defn conflict
-  [body]
+  [message]
   {:status 409
    :headers {}
-   :body body})
+   :body {:message message}})
 
 
 ;;; Server Errors

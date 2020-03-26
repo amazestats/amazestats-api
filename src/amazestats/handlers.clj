@@ -1,9 +1,9 @@
 (ns amazestats.handlers
-  (:require [clojure.string :as string]
-            [ring.util.response :refer [bad-request created not-found]]
+  (:require [ring.util.response :refer [bad-request created not-found]]
             [amazestats.authentication :as auth]
             [amazestats.database [core :as db]
                                  [user :as user-db]]
+            [amazestats.util.core :refer [create-key]]
             [amazestats.util.response :refer [conflict ok]]
             [amazestats.util.validators :refer [valid-alias? valid-password?]]))
 
@@ -50,58 +50,6 @@
           (if (nil? user)
             (conflict {:message "Alias is already in use."})
             (created (str "/api/users/" (:id user)))))))))
-
-(defn filter-division
-  [col]
-  (map (fn [x] (dissoc x :division)) col))
-
-(defn create-key
-  [name]
-  (string/replace
-   (string/replace
-    (string/lower-case name)
-    " " "-")
-   "_" "-"))
-
-(defn get-division
-  [division]
-  (let [division-teams (filter-division
-                        (db/find-teams-by-division-id (:id division)))
-        division-matches (filter-division
-                          (db/find-matches-by-division (:id division)))]
-    (ok {:division (assoc division
-                          :teams division-teams
-                          :matches division-matches)})))
-
-(defn get-division-by-id
-  [id]
-  (let [division (db/get-division-by-id (Integer. id))]
-    (if (not (nil? division))
-      (get-division division)
-      (not-found "Division does not exist."))))
-
-(defn find-division-by-key
-  [division-key]
-  (let [division (db/find-division-by-key division-key)]
-    (if (not (nil? division))
-      (get-division division)
-      (not-found "Division does not exist."))))
-
-(defn get-divisions
-  [request]
-  (let [division-key (get-in request [:params :key])]
-    (if (not (nil? division-key))
-      (find-division-by-key division-key)
-      (ok {:divisions (db/get-divisions)}))))
-
-(defn create-division!
-  [request]
-  (let [division-name (get-in request [:body :name])
-        division-key (create-key division-name)
-        division (db/create-division! division-name division-key)]
-    (if (not (nil? division))
-      (created (str "/api/divisions/" (:id division)))
-      (bad-request (str "Could not create division: " division-name)))))
 
 (defn get-teams
   [request]

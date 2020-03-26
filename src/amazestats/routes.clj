@@ -13,11 +13,8 @@
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.util.response :refer [not-found]]
             [amazestats.authentication :as auth]
-            [amazestats.handlers :refer [create-division!
-                                         create-team!
+            [amazestats.handlers :refer [create-team!
                                          create-user!
-                                         get-division-by-id
-                                         get-divisions
                                          get-matches
                                          get-teams
                                          get-token
@@ -25,6 +22,9 @@
                                          get-users]]
             [amazestats.handlers.competition :refer [get-competition
                                                      get-competitions]]
+            [amazestats.handlers.division :refer [create-division!
+                                                  get-division-by-id
+                                                  get-divisions]]
             [amazestats.middleware :refer [wrap-content-type
                                            wrap-enforce-authentication]]))
 

@@ -23,6 +23,13 @@
       (internal-error)
       (ok {:teams teams}))))
 
+(defn find-teams-by-key
+  [team-key]
+  (let [teams (db/get-teams-by-key team-key)]
+    (if (nil? teams)
+      (internal-error)
+      (ok {:teams teams}))))
+
 (defn find-teams-by-competition
   [competition]
   (let [competition (Integer. competition)

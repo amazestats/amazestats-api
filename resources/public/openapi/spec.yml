@@ -188,19 +188,12 @@ paths:
       summary: Get teams.
       parameters:
         - in: query
-          name: competition
+          name: key
           required: false
           schema:
-            type: integer
-            example: 1
-          description: The ID of the competition to get teams from.
-        - in: query
-          name: division
-          required: false
-          schema:
-            type: integer
-            example: 1
-          description: The ID of the division to get the teams from.
+            type: string
+            example: "arsenal"
+          description: Find team with that has the given key.
       responses:
         200:
           description: Successfully retrieved teams.
@@ -208,8 +201,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Teams'
-        404:
-          description: The competition, or division, does not exist.
 
   /teams/{id}:
     get:

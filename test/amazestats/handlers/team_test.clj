@@ -46,6 +46,25 @@
               :headers {}
               :body {:teams (list)}})))))
 
+(deftest find-teams-by-key-test
+
+  (testing "200 Teams found by key"
+    (let [teams
+          (list
+            {:id 1 :key "bury" :name "Bury" :competition 1 :division 1})]
+      (with-redefs [db/get-teams-by-key (fn [_] teams)]
+        (is (= (find-teams-by-key "bury")
+               {:status 200
+                :headers {}
+                :body {:teams teams}})))))
+
+  (testing "200 No teams found"
+    (with-redefs [db/get-teams-by-key (fn [_] ())]
+      (is (= (find-teams-by-key "bury")
+             {:status 200
+              :headers {}
+              :body {:teams ()}})))))
+
 (deftest find-teams-by-competition-test
   
   (testing "200 Teams found"

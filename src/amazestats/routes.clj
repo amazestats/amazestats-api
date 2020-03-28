@@ -27,6 +27,7 @@
             [amazestats.handlers.team :refer [create-team!
                                               find-teams-by-competition
                                               find-teams-by-division
+                                              find-teams-by-key
                                               get-team-by-id
                                               get-all-teams]]
             [amazestats.handlers.user :refer [create-user!
@@ -76,7 +77,9 @@
                 (find-seasons-by-division division)))
 
   (context "/api/teams" []
-           (GET "/" _ (get-all-teams))
+           (GET "/" [key] (if (nil? key)
+                            (get-all-teams)
+                            (find-teams-by-key key)))
            (GET "/:id" [id] (get-team-by-id id)))
 
   (context "/api/seasons" []

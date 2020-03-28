@@ -46,3 +46,9 @@
       ["SELECT * FROM teams WHERE division = ?" division-id])
     (catch org.postgresql.util.PSQLException e
       (log/error "Failed to get teams for division:" division-id e))))
+
+(defn get-teams-by-key
+  [team-key]
+  (try
+    (jdbc/query db-spec ["SELECT * FROM teams WHERE key = ?" team-key])
+    (catch org.postgresql.util.PSQLException e (log/error e))))

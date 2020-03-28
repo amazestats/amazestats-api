@@ -3,23 +3,7 @@
             [clojure.test :refer :all]
             [clojure.java.jdbc :as jdbc]))
 
-(deftest get-season-test
-
-  (testing "Returns season map when entity exists"
-    (let [season {:id 16
-                  :key "2019"
-                  :name "2019"
-                  :division 4}]
-      (with-redefs [jdbc/query (fn [_s _q] (list season))]
-        (is (= (get-season-by-id 1)
-               season)))))
-
-  (testing "Returns nil when season does not exist"
-    (with-redefs [jdbc/query (fn [_s _q] ())]
-      (is (= (get-season-by-id 1)
-             nil)))))
-
-(deftest get-seasons-test
+(deftest get-seasons-by-division-test
 
   (testing "Returns valid list of season maps"
     (let [seasons (list {:id 1

@@ -24,10 +24,17 @@
   [id]
   (first
     (try
-      (jdbc/query db-spec ["SELECT * FROM divisions WHERE id = ?" id])
+      (let [divisions (jdbc/query
+                        db-spec
+                        ["SELECT * FROM divisions WHERE id = ?" id])]
+        (list (if (seq divisions)
+                (assoc (first divisions)
+                       :seasons
+                       (jdbc/query
+                         db-spec
+                         ["SELECT * FROM seasons WHERE division = ?" id])))))
       (catch org.postgresql.util.PSQLException e
-        (log/error e "Failed to get division:" id)
-        nil))))
+        (log/error e "Failed to get division:" id)))))
 
 (defn get-divisions-by-key
   [division-key]

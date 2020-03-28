@@ -74,21 +74,6 @@ VALUES ('2', '3', '2');
 -- MATCHES SEASON ID 3 // DIVISION 2
 
 INSERT INTO matches (season, home_team, away_team)
-VALUES ('2', '5', '6');
-INSERT INTO matches (season, home_team, away_team)
-VALUES ('2', '7', '8');
-INSERT INTO matches (season, home_team, away_team)
-VALUES ('2', '5', '7');
-INSERT INTO matches (season, home_team, away_team)
-VALUES ('2', '6', '8');
-INSERT INTO matches (season, home_team, away_team)
-VALUES ('2', '5', '8');
-INSERT INTO matches (season, home_team, away_team)
-VALUES ('2', '7', '6');
-
--- MATCHES SEASON ID 4 // DIVISION 2
-
-INSERT INTO matches (season, home_team, away_team)
 VALUES ('3', '5', '6');
 INSERT INTO matches (season, home_team, away_team)
 VALUES ('3', '7', '8');
@@ -100,6 +85,21 @@ INSERT INTO matches (season, home_team, away_team)
 VALUES ('3', '5', '8');
 INSERT INTO matches (season, home_team, away_team)
 VALUES ('3', '7', '6');
+
+-- MATCHES SEASON ID 4 // DIVISION 2
+
+INSERT INTO matches (season, home_team, away_team)
+VALUES ('4', '5', '6');
+INSERT INTO matches (season, home_team, away_team)
+VALUES ('4', '7', '8');
+INSERT INTO matches (season, home_team, away_team)
+VALUES ('4', '5', '7');
+INSERT INTO matches (season, home_team, away_team)
+VALUES ('4', '6', '8');
+INSERT INTO matches (season, home_team, away_team)
+VALUES ('4', '5', '8');
+INSERT INTO matches (season, home_team, away_team)
+VALUES ('4', '7', '6');
 
 -- SETS (oh my)
 

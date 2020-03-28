@@ -516,11 +516,23 @@ components:
           readOnly: true
         competition:
           type: integer
+        seasons:
+          $ref: '#/components/schemas/Seasons'
+
+    DivisionLite:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        key:
+          type: string
 
     Divisions:
       type: array
       items:
-        $ref: '#/components/schemas/Division'
+        $ref: '#/components/schemas/DivisionLite'
 
     Season:
       type: object

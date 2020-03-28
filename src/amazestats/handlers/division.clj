@@ -14,6 +14,7 @@
   [id]
   (log/info "Getting division by ID:" id)
   (let [division (db/get-division-by-id (Integer. id))]
+    (log/info "division:" division)
     (if (nil? division)
       (not-found "Division does not exist in competition.")
       (ok {:division division}))))

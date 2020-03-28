@@ -14,5 +14,5 @@
 (defn get-matches-by-season
   [season]
   (try
-    (jdbc/query db-spec ["SELECT * FROM matches WHERE seasons = ?" season])
+    (jdbc/query db-spec ["SELECT * FROM matches WHERE season = ?" season])
     (catch org.postgresql.util.PSQLException e (log/error e))))

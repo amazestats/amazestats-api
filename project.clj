@@ -18,7 +18,8 @@
                  [ring/ring-defaults "0.3.2"]
                  [ring/ring-json "0.4.0"]
                  [ring-cors "0.1.13"]]
-  :plugins [[lein-ring "0.12.5"]
+  :plugins [[lein-cloverage "1.1.2"]
+            [lein-ring "0.12.5"]
             [lein-environ "1.1.0"]]
   :ring {:handler amazestats.main/handler
          :host "0.0.0.0"

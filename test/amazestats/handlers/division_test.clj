@@ -38,6 +38,24 @@
                 :headers {}
                 :body {:divisions divisions}}))))))
 
+(deftest find-divisions-by-key-test
+
+  (testing "200 Found division"
+    (let [divisions (list
+                      {:id 1 :key "div-1" :name "Div 1" :competition 1})]
+      (with-redefs [db/get-divisions-by-key (fn [_] divisions)]
+        (is (= (find-divisions-by-key "div-1")
+               {:status 200
+                :headers {}
+                :body {:divisions divisions}})))))
+
+  (testing "200 Divisions not found"
+    (with-redefs [db/get-divisions-by-key (fn [_] ())]
+      (is (= (find-divisions-by-key "premier-league")
+             {:status 200
+              :headers {}
+              :body {:divisions ()}})))))
+
 (deftest find-divisions-by-competition-test
 
   (testing "200 Found divisions"

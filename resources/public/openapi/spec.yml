@@ -126,12 +126,12 @@ paths:
       summary: Get all divisions
       parameters:
         - in: query
-          name: competition
-          required: true
+          name: key
+          required: false
           schema:
-            type: integer
-            example: 1
-          description: The ID of the competition to get divisions from.
+            type: string
+            example: 'premier-league'
+          description: Find division by its key.
       responses:
         200:
           description: Successfully retrieved divisions.

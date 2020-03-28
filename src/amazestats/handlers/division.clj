@@ -38,6 +38,13 @@
       (not-found "Competition does not exist.")
       (ok {:divisions divisions}))))
 
+(defn find-divisions-by-key
+  [division-key]
+  (let [divisions (db/get-divisions-by-key division-key)]
+    (if (nil? divisions)
+      (internal-error)
+      (ok {:divisions divisions}))))
+
 (defn create-division!
   [competition request]
   (let [competition (Integer. competition)

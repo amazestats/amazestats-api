@@ -18,6 +18,7 @@
                                                      get-competition-by-id]]
             [amazestats.handlers.division :refer [create-division!
                                                   find-divisions-by-competition
+                                                  find-divisions-by-key
                                                   get-division-by-id
                                                   get-all-divisions]]
             [amazestats.handlers.match :refer [find-matches-by-season
@@ -69,7 +70,9 @@
                 (find-teams-by-competition competition)))
 
   (context "/api/divisions" []
-           (GET "/" _ (get-all-divisions))
+           (GET "/" [key] (if (nil? key)
+                            (get-all-divisions)
+                            (find-divisions-by-key key)))
            (GET "/:id" [id] (get-division-by-id id))
            (GET "/:division/teams" [division]
                 (find-teams-by-division division))

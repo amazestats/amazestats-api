@@ -151,11 +151,11 @@ VALUES ('6', '25', '20');
 -- SEASON 2
 
 INSERT INTO sets (match, home_score, away_score)
-VALUES ('7', '25', '13');
+VALUES ('7', '22', '25');
 INSERT INTO sets (match, home_score, away_score)
-VALUES ('7', '27', '25');
+VALUES ('7', '20', '25');
 INSERT INTO sets (match, home_score, away_score)
-VALUES ('7', '25', '20');
+VALUES ('7', '21', '25');
 
 INSERT INTO sets (match, home_score, away_score)
 VALUES ('8', '25', '13');
@@ -165,25 +165,27 @@ INSERT INTO sets (match, home_score, away_score)
 VALUES ('8', '25', '20');
 
 INSERT INTO sets (match, home_score, away_score)
-VALUES ('9', '25', '13');
+VALUES ('9', '25', '27');
 INSERT INTO sets (match, home_score, away_score)
-VALUES ('9', '27', '25');
+VALUES ('9', '27', '29');
 INSERT INTO sets (match, home_score, away_score)
-VALUES ('9', '25', '20');
+VALUES ('9', '25', '27');
 
 INSERT INTO sets (match, home_score, away_score)
 VALUES ('10', '25', '13');
 INSERT INTO sets (match, home_score, away_score)
-VALUES ('10', '27', '25');
+VALUES ('10', '27', '21');
 INSERT INTO sets (match, home_score, away_score)
 VALUES ('10', '25', '20');
 
 INSERT INTO sets (match, home_score, away_score)
 VALUES ('11', '25', '13');
 INSERT INTO sets (match, home_score, away_score)
-VALUES ('11', '27', '25');
+VALUES ('11', '20', '25');
 INSERT INTO sets (match, home_score, away_score)
 VALUES ('11', '25', '20');
+INSERT INTO sets (match, home_score, away_score)
+VALUES ('11', '25', '5');
 
 INSERT INTO sets (match, home_score, away_score)
 VALUES ('12', '25', '13');

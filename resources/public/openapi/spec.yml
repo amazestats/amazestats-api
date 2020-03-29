@@ -376,6 +376,42 @@ paths:
         404:
           description: Match does not exist.
 
+  /matches/{match}/referee:
+    put:
+      tags: [match]
+      summary: Set the match referee
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: The match ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                referee:
+                  type: integer
+                  description: The refereeing team's ID.
+      responses:
+        200:
+          description: Referee updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  referee:
+                    type: integer
+                    description: The ID of the newly assigned refereeing team.
+        400:
+          description: Invalid referee.
+        404:
+          description: Match does not exist.
+
 components:
   securitySchemes:
     basic:
@@ -465,6 +501,8 @@ components:
         home_team:
           type: integer
         away_team:
+          type: integer
+        referee:
           type: integer
         sets:
           $ref: '#/components/schemas/Sets'

@@ -54,7 +54,8 @@ CREATE TABLE IF NOT EXISTS matches(
   id SERIAL PRIMARY KEY,
   season INTEGER REFERENCES seasons(id),
   home_team INTEGER REFERENCES teams(id),
-  away_Team INTEGER REFERENCES teams(id)
+  away_team INTEGER REFERENCES teams(id),
+  referee INTEGER REFERENCES teams(id)
 );
 
 CREATE TABLE IF NOT EXISTS sets(

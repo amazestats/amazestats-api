@@ -39,7 +39,17 @@
 (defn get-divisions-by-key
   [division-key]
   (try
-    (jdbc/query db-spec ["SELECT * FROM divisions WHERE key = ?" division-key])
+    (let [divisions (jdbc/query
+                      db-spec
+                      ["SELECT * FROM divisions WHERE key = ?" division-key])]
+      (list
+        (if (seq divisions)
+          (assoc (first divisions)
+                 :seasons
+                 (jdbc/query
+                   db-spec
+                   ["SELECT * FROM seasons WHERE division = ?"
+                    (:id (first divisions))])))))
     (catch org.postgresql.util.PSQLException e
       (log/error e "Failed to get division:" division-key))))
 

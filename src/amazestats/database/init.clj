@@ -2,7 +2,8 @@
   (:require [amazestats.database
              [core :refer [db-spec]]
              [user :as user-db]
-             [competition :as competition-db]]
+             [competition :as competition-db]
+             [migration :as migration]]
             [clojure.tools.logging :as log]
             [clojure.java.io :as io]
             [clojure.java.jdbc :as jdbc]))
@@ -15,7 +16,7 @@
 
 (defn init []
   (log/debug "Creating database tables...")
-  (jdbc/execute! db-spec [(slurp (io/resource "sql/schema.sql"))])
+  (migration/init)
 
   (log/info "Creating initial competition and admin...")
   (let [user (user-db/create-user! "admin" "admin")

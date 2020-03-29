@@ -1,0 +1,2 @@
+ALTER TABLE matches
+ADD COLUMN referee INTEGER REFERENCES teams(id);

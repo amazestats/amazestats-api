@@ -1,7 +1,5 @@
 (ns amazestats.handlers
-  (:require [ring.util.response :refer [bad-request created not-found]]
-            [amazestats.authentication :as auth]
-            [amazestats.database.core :as db]))
+  (:require [amazestats.authentication :as auth]))
                                  
 (defn get-token
   "Create a response with a newly generated authentication token."

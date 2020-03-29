@@ -4,8 +4,7 @@
            org.postgresql.util.PSQLException)
   (:require [clojure.string]
             [environ.core :refer [env]]
-            [jdbc.pool.c3p0 :as pool]
-            [amazestats.util.parse :refer [join]]))
+            [jdbc.pool.c3p0 :as pool]))
 
 (def db-uri
   (let [db-url (env :database-url)]

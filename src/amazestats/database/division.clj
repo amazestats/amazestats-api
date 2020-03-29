@@ -2,8 +2,7 @@
   (:import org.postgresql.util.PSQLException)
   (:require [amazestats.database.core :refer [db-spec]]
             [clojure.java.jdbc :as jdbc]
-            [clojure.tools.logging :as log]
-            [amazestats.util.parse :refer [join]]))
+            [clojure.tools.logging :as log]))
 
 (defn get-all-divisions
   []

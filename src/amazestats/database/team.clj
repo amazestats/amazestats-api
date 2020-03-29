@@ -1,7 +1,6 @@
 (ns amazestats.database.team
   (:import org.postgresql.util.PSQLException)
   (:require [amazestats.database.core :refer [db-spec]]
-            [amazestats.util.parse :refer [join]]
             [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]))
 

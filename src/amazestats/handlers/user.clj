@@ -1,6 +1,5 @@
 (ns amazestats.handlers.user
   (:require [amazestats.database.user :as db]
-            [amazestats.util.core :refer [create-key]]
             [amazestats.util.filter :refer [filter-password]]
             [amazestats.util.response :refer [bad-request
                                               conflict

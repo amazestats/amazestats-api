@@ -4,6 +4,7 @@
                                     defroutes
                                     GET
                                     POST
+                                    PUT
                                     routes
                                     wrap-routes]]
             [compojure.route :as route]
@@ -22,7 +23,8 @@
                                                   get-division-by-id
                                                   get-all-divisions]]
             [amazestats.handlers.match :refer [find-matches-by-season
-                                               get-match-by-id]]
+                                               get-match-by-id
+                                               update-match-referee]]
             [amazestats.handlers.season :refer [find-seasons-by-division
                                                 get-season-by-id]]
             [amazestats.handlers.team :refer [create-team!
@@ -52,7 +54,9 @@
     (context "/competitions/:competition/teams" [competition]
       (POST "/" request (create-team! competition request)))
     (context "/competitions/:competition/divisions" [competition]
-      (POST "/" request (create-division! competition request)))))
+      (POST "/" request (create-division! competition request)))
+    (context "/matches/:match" [match]
+             (PUT "/referee" request (update-match-referee match request)))))
 
 
 ;;; PUBLIC ROUTES

@@ -30,10 +30,11 @@
    :body {:message "You must be authenticated to access this resource."}})
 
 (defn forbidden
-  []
-  {:status 403
-   :headers {}
-   :body {:message "Forbidden"}})
+  ([] (forbidden {:message "Forbidden"}))
+  ([body]
+   {:status 403
+    :headers {}
+    :body body}))
 
 (defn not-found
   [& message]

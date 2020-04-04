@@ -380,6 +380,9 @@ paths:
     put:
       tags: [match]
       summary: Set the match referee
+      description: >
+        Update the referee of the given match. The user making the request must
+        be authenticated as a competition admin.
       parameters:
         - in: path
           name: id
@@ -409,6 +412,8 @@ paths:
                     description: The ID of the newly assigned refereeing team.
         400:
           description: Invalid referee.
+        403:
+          description: User is not a competition admin.
         404:
           description: Match does not exist.
 

@@ -456,6 +456,9 @@ components:
           type: string
         id:
           type: number
+        expiration-date:
+          type: string
+          format: date-time
 
     Competition:
       type: object

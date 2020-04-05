@@ -3,6 +3,7 @@
             [buddy.hashers :as hasher]
             [buddy.sign.jwt :as jwt]
             [clj-time.core :as time]
+            [clj-time.format :as time-format]
             [environ.core :refer [env]]
             [amazestats.database.user :as db]))
 
@@ -14,9 +15,13 @@
                          (read-string (env :token-expiration-period)))))
 
 (defn create-token
-  "Create a JWT token containing user ID and expiration date."
+  "Create a token containing user ID and expiration date.
+  Returns said token and its expiration date as a map."
   [user-id]
-  (jwt/sign {:user-id user-id :exp (expire-date)} secret-key))
+  (let [exp (expire-date)
+        token (jwt/sign {:user-id user-id :exp exp} secret-key)]
+    {:token token
+     :exp (time-format/unparse (time-format/formatters :date-time) exp)}))
 
 (defn basic-authfn
   "Authentication function for basic authentication backend. Checks that the

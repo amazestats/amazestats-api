@@ -42,7 +42,7 @@
             {:message
              "The user must be a competition admin to update referees."}) 
 
-          (let [referee (Integer. (get-in request [:body :referee]))
+          (let [referee (Integer. (get-in request [:body :id]))
                 referee-map (db/set-match-referee (:id match) referee)]
             (if (nil? referee-map)
               (bad-request "Could not appoint team as referee.")

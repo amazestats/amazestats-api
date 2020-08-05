@@ -396,7 +396,7 @@ paths:
             schema:
               type: object
               properties:
-                referee:
+                id:
                   type: integer
                   description: The refereeing team's ID.
       responses:

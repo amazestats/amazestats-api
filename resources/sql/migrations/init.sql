@@ -36,6 +36,8 @@ CREATE TABLE IF NOT EXISTS seasons(
   key VARCHAR(50),
   name VARCHAR(50),
   division INTEGER REFERENCES divisions(id),
+  start_date TIMESTAMP,
+  end_date TIMESTAMP,
   UNIQUE (key, division)
 );
 
@@ -55,7 +57,8 @@ CREATE TABLE IF NOT EXISTS matches(
   season INTEGER REFERENCES seasons(id),
   home_team INTEGER REFERENCES teams(id),
   away_team INTEGER REFERENCES teams(id),
-  referee INTEGER REFERENCES teams(id)
+  referee INTEGER REFERENCES teams(id),
+  match_date TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS sets(

@@ -95,7 +95,7 @@
               :body {:message "Could not appoint team as referee."}}))))
 
   (testing "200 The updated resource is returned"
-    (with-redefs [db/set-match-referee (fn [_ ref] {:id ref})
+    (with-redefs [db/set-match-referee (fn [_ r] {:referee r})
                   db/get-match-by-id (fn [_] {:id 20})
                   db/get-competition-id-for-match (fn [_] 17)
                   competition-db/competition-admin? (fn [_c _u] true)]
@@ -103,4 +103,4 @@
                                          :body {:id "17"}})
              {:status 200
               :headers {}
-              :body {:id 17}})))))
+              :body {:referee 17}})))))

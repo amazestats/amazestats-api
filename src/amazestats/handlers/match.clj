@@ -25,7 +25,7 @@
       (not-found "Season does not exist.")
       (ok {:matches matches}))))
 
-(defn update-match-referee
+(defn update-match-referee!
   "Updates the given `match`'s referee.
   The user updating the referee must be authenticated as a competition
   administrator, otherwise a 403 will be returned. On success, the updated
@@ -45,7 +45,7 @@
              "The user must be a competition admin to update referees."}) 
 
           (let [referee (Integer. (get-in request [:body :id]))
-                referee-map (db/set-match-referee (:id match) referee)]
+                referee-map (db/set-match-referee! (:id match) referee)]
             (if (nil? referee-map)
               (bad-request "Could not appoint team as referee.")
               (ok referee-map))))))))
@@ -69,7 +69,7 @@
             (forbidden
               {:message
                "The user must be a competition admin to update referees."})
-            (let [referee (db/set-match-referee (:id match) nil)]
+            (let [referee (db/set-match-referee! (:id match) nil)]
               (if (nil? referee)
                 (internal-error)
                 (no-content)))))))))

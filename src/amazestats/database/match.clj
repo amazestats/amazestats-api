@@ -36,7 +36,7 @@
            matches))
     (catch org.postgresql.util.PSQLException e (log/error e))))
 
-(defn set-match-referee
+(defn set-match-referee!
   "Updates a `match` with a new team as referee.
   Will return the updated column and value as a map if successful, otherwise
   nil."

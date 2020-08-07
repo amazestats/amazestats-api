@@ -26,7 +26,7 @@
                                                   get-all-divisions]]
             [amazestats.handlers.match :refer [find-matches-by-season
                                                get-match-by-id
-                                               update-match-referee
+                                               update-match-referee!
                                                remove-match-referee!]]
             [amazestats.handlers.season :refer [find-seasons-by-division
                                                 get-season-by-id]]
@@ -59,7 +59,7 @@
     (context "/competitions/:competition/divisions" [competition]
       (POST "/" request (create-division! competition request)))
     (context "/matches/:match" [match]
-             (PUT "/referee" request (update-match-referee match request))
+             (PUT "/referee" request (update-match-referee! match request))
              (DELETE "/referee" request (remove-match-referee! match request)))))
 
 

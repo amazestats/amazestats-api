@@ -61,11 +61,11 @@
 (deftest update-match-referee-test
 
   (testing "404 The match does not exist"
-    (with-redefs [db/set-match-referee (fn [_ _r] nil)
+    (with-redefs [db/set-match-referee! (fn [_ _r] nil)
                   db/get-competition-id-for-match (fn [_] 17)
                   db/get-match-by-id (fn [_] nil)
                   competition-db/competition-admin? (fn [_c _u] true)]
-      (is (= (update-match-referee "20" {:identity {:user-id 5}
+      (is (= (update-match-referee! "20" {:identity {:user-id 5}
                                          :body {:id "17"}})
              {:status 404
               :headers {}
@@ -75,7 +75,7 @@
     (with-redefs [competition-db/competition-admin? (fn [_c _u] false)
                   db/get-match-by-id (fn [_] {:id 20})
                   db/get-competition-id-for-match (fn [_] 17)]
-      (is (= (update-match-referee "20" {:identity {:user-id 5}
+      (is (= (update-match-referee! "20" {:identity {:user-id 5}
                                          :body {:id "17"}})
              {:status 403
               :headers {}
@@ -84,22 +84,22 @@
                "The user must be a competition admin to update referees."}}))))
 
   (testing "400 The given referee does not match a team id"
-    (with-redefs [db/set-match-referee (fn [_ _r] nil)
+    (with-redefs [db/set-match-referee! (fn [_ _r] nil)
                   db/get-competition-id-for-match (fn [_] 17)
                   db/get-match-by-id (fn [_] {:id 20})
                   competition-db/competition-admin? (fn [_c _u] true)]
-      (is (= (update-match-referee "20" {:identity {:user-id 6}
+      (is (= (update-match-referee! "20" {:identity {:user-id 6}
                                          :body {:id "17"}})
              {:status 400
               :headers {}
               :body {:message "Could not appoint team as referee."}}))))
 
   (testing "200 The updated resource is returned"
-    (with-redefs [db/set-match-referee (fn [_ r] {:referee r})
+    (with-redefs [db/set-match-referee! (fn [_ r] {:referee r})
                   db/get-match-by-id (fn [_] {:id 20})
                   db/get-competition-id-for-match (fn [_] 17)
                   competition-db/competition-admin? (fn [_c _u] true)]
-      (is (= (update-match-referee "20" {:identity {:user-id 5}
+      (is (= (update-match-referee! "20" {:identity {:user-id 5}
                                          :body {:id "17"}})
              {:status 200
               :headers {}
@@ -108,7 +108,7 @@
 (deftest remove-match-referee-test
 
   (testing "204 Referee removed"
-    (with-redefs [db/set-match-referee (fn [_ r] {:referee r})
+    (with-redefs [db/set-match-referee! (fn [_ r] {:referee r})
                   db/get-match-by-id (fn [id] {:id id :referee 7})
                   db/get-competition-id-for-match (fn [_] 17)
                   competition-db/competition-admin? (fn [_c _u] true)]
@@ -142,7 +142,7 @@
               :body {:message "The match does not have a referee."}}))))
 
   (testing "500 Error occurred in the database"
-    (with-redefs [db/set-match-referee (fn [_ _r] nil)
+    (with-redefs [db/set-match-referee! (fn [_ _r] nil)
                   db/get-match-by-id (fn [id] {:id id :referee 7})
                   db/get-competition-id-for-match (fn [_] 17)
                   competition-db/competition-admin? (fn [_c _u] true)]

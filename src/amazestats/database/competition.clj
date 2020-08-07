@@ -52,7 +52,8 @@
                        :competition_admins
                        {:admin user
                         :competition competition})
-         (catch org.postgresql.util.PSQLException _ nil))))
+         (catch org.postgresql.util.PSQLException e
+           (log/error "Failed to add competition admin:" e)))))
 
 (defn remove-competition-admin!
   "Remove `user` as admin for `competition`.

@@ -104,3 +104,49 @@
              {:status 200
               :headers {}
               :body {:referee 17}})))))
+
+(deftest remove-match-referee-test
+
+  (testing "204 Referee removed"
+    (with-redefs [db/set-match-referee (fn [_ r] {:referee r})
+                  db/get-match-by-id (fn [id] {:id id :referee 7})
+                  db/get-competition-id-for-match (fn [_] 17)
+                  competition-db/competition-admin? (fn [_c _u] true)]
+      (is (= (remove-match-referee! "20" {:identity {:user-id 5}})
+             {:status 204
+              :headers {}}))))
+
+  (testing "403 User is not an admin"
+    (with-redefs [db/get-match-by-id (fn [id] {:id id :referee 7})
+                  db/get-competition-id-for-match (fn [_] 17)
+                  competition-db/competition-admin? (fn [_c _u] false)]
+      (is (= (remove-match-referee! "20" {:identity {:user-id 5}})
+             {:status 403
+              :headers {}
+              :body
+              {:message
+               "The user must be a competition admin to update referees."}}))))
+
+  (testing "404 Match does not exist"
+    (with-redefs [db/get-match-by-id (fn [_] nil)]
+      (is (= (remove-match-referee! "20" {:identity {:user-id 5}})
+             {:status 404
+              :headers {}
+              :body {:message "The match does not exist."}}))))
+
+  (testing "404 Match does not have referee"
+    (with-redefs [db/get-match-by-id (fn [id] {:id id :referee nil})]
+      (is (= (remove-match-referee! "20" {:identity {:user-id 5}})
+             {:status 404
+              :headers {}
+              :body {:message "The match does not have a referee."}}))))
+
+  (testing "500 Error occurred in the database"
+    (with-redefs [db/set-match-referee (fn [_ _r] nil)
+                  db/get-match-by-id (fn [id] {:id id :referee 7})
+                  db/get-competition-id-for-match (fn [_] 17)
+                  competition-db/competition-admin? (fn [_c _u] true)]
+      (is (= (remove-match-referee! "20" {:identity {:user-id 5}})
+             {:status 500
+              :headers {}
+              :body {:message "Internal server error"}})))))

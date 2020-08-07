@@ -451,6 +451,27 @@ paths:
           description: User is not a competition admin.
         404:
           description: Match does not exist.
+    delete:
+      tags: [match]
+      summary: Remove the match referee
+      description: >
+        Delete the referee of the given match. The user making the request must
+        be authenticated as a competition admin.
+      parameters:
+        - in: path
+          name: match
+          schema:
+            type: integer
+          description: The match ID.
+      responses:
+        204:
+          description: Referee removed.
+        403:
+          description: User is not a competition admin.
+        404:
+          description: >
+            Either the match does not exist or the match does not have a
+            referee.
 
 components:
   securitySchemes:

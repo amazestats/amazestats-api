@@ -14,6 +14,11 @@
   {:status 201
    :headers {"Location" location-uri}})
 
+(defn no-content
+  []
+  {:status 204
+   :headers {}})
+
 
 ;;; Client Errors
 

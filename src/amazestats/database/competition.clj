@@ -11,8 +11,8 @@
   error occurs `nil` is returned."
   [competition-name competition-key]
   (try
-    (jdbc/insert! db-spec :competitions {:name competition-name
-                                         :key competition-key})
+    (first (jdbc/insert! db-spec :competitions {:name competition-name
+                                                :key competition-key}))
     (catch org.postgresql.util.PSQLException e
       (log/error "Failed to create competition:" competition-name e))))
 
@@ -47,6 +47,8 @@
   Returns a map of the admin created on success, or nil if the `user` already
   is an admin in the `competition`."
   [competition user]
+  (log/debug "Adding admin with user id:" user
+             "to competition with id:" competition ".")
   (first
     (try (jdbc/insert! db-spec
                        :competition_admins

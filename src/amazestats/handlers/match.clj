@@ -4,6 +4,8 @@
             [amazestats.database.season :as season-db]
             [amazestats.util.response :refer [bad-request
                                               forbidden
+                                              internal-error
+                                              no-content
                                               not-found
                                               ok]]))
 
@@ -47,3 +49,27 @@
             (if (nil? referee-map)
               (bad-request "Could not appoint team as referee.")
               (ok referee-map))))))))
+
+(defn remove-match-referee!
+  "Removes the given `match`'s referee.
+  The user performing the removal must be authenticated as a competition admin.
+  A 404 will be returned both if the `match` does not exist, and if the `match`
+  does not have a set referee."
+  [match request]
+  (let [match (db/get-match-by-id (Integer. match))]
+    (if (nil? match)
+      (not-found "The match does not exist.")
+      (if (nil? (:referee match))
+        (not-found "The match does not have a referee.")
+        (let [competition (db/get-competition-id-for-match (:id match))
+              competition-admin? (competition-db/competition-admin?
+                                   competition
+                                   (get-in request [:identity :user-id]))]
+          (if (not competition-admin?)
+            (forbidden
+              {:message
+               "The user must be a competition admin to update referees."})
+            (let [referee (db/set-match-referee (:id match) nil)]
+              (if (nil? referee)
+                (internal-error)
+                (no-content)))))))))

@@ -9,6 +9,8 @@ info:
     url: https://www.eclipse.org/legal/epl-2.0/
 
 tags:
+   - name: admin
+     description: Operations related to administration
    - name: auth
      description: Operations related to authentication and authorization
    - name: competition
@@ -23,7 +25,6 @@ tags:
      description: Operations related to teams
    - name: user
      description: Operations related to users
-
 
 servers:
   - url: http://localhost/api
@@ -233,6 +234,28 @@ paths:
                 $ref: '#/components/schemas/Team'
         404:
           description: The team does not exist.
+
+  /competition/{competition}/admins:
+    get:
+      tags: [competition admin]
+      summary: Get competition admins.
+      parameters:
+        - in: path
+          name: competition
+          description: The ID of the competition.
+          required: true
+          schema:
+            type: integer
+            example: 2
+      responses:
+        200:
+          description: Successfully retrieved admins.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionAdmins'
+        404:
+          description: The competition does not exist.
 
   /competitions/{competition}/teams:
     get:
@@ -491,6 +514,22 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Competition'
+
+    CompetitionAdmin:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        alias:
+          type: string
+          readOnly: true
+          example: Kalle
+
+    CompetitionAdmins:
+      type: array
+      items:
+        $ref: '#/components/schemas/CompetitionAdmin'
 
     Set:
       type: object

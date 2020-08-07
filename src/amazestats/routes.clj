@@ -16,6 +16,7 @@
             [amazestats.authentication :as auth]
             [amazestats.handlers :refer [get-token]]
             [amazestats.handlers.competition :refer [get-all-competitions
+                                                     get-competition-admins
                                                      get-competition-by-id]]
             [amazestats.handlers.division :refer [create-division!
                                                   find-divisions-by-competition
@@ -71,7 +72,9 @@
            (GET "/:competition/divisions" [competition]
                 (find-divisions-by-competition competition))
            (GET "/:competition/teams" [competition]
-                (find-teams-by-competition competition)))
+                (find-teams-by-competition competition))
+           (GET "/:competition/admins" [competition]
+                (get-competition-admins competition)))
 
   (context "/api/divisions" []
            (GET "/" [key] (if (nil? key)

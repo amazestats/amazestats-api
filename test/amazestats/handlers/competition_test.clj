@@ -50,3 +50,38 @@
              {:status 404
               :headers {}
               :body {:message "Competition does not exist."}})))))
+
+(deftest get-competition-admins-test
+
+  (testing "200 Get admins OK"
+    (with-redefs [db/get-competition-admins (fn [_] '({:admin 1
+                                                       :alias "Ken"}
+                                                      {:admin 2
+                                                       :alias "Barbie"}))]
+      (is (= (get-competition-admins "1")
+             {:status 200
+              :headers {}
+              :body {:admins '({:id 1
+                                :alias "Ken"}
+                               {:id 2
+                                :alias "Barbie"})}}))))
+
+
+  (testing "404 Competition does not exist"
+    (with-redefs [db/get-competition-admins (fn [_] '())
+                  db/get-competition-by-id (fn [_] nil)]
+      (is (= (get-competition-admins "1")
+             {:status 404
+              :headers {}
+              :body {:message "Competition does not exist."}}))))
+
+  (testing "200 Empty list of admins"
+    (with-redefs [db/get-competition-admins (fn [_] '())
+                  db/get-competition-by-id (fn [_] {:id 1
+                                                    :key "korpen"
+                                                    :name "Korpen V"})]
+      (is (= (get-competition-admins "1")
+             {:status 200
+              :headers {}
+              :body {:admins '()}})))))
+  

@@ -60,3 +60,7 @@ The same commands could be ran by:
 ```bash
 make deploy server-logs
 ```
+
+### Migrations
+
+See [Migrations](resources/sql/migrations/README.md).

@@ -2,17 +2,27 @@ openapi: 3.0.0
 
 info:
   title: Volleyball Stats API
+  description: Public API for Amazestats
   version: 0.3.0
+  license:
+    name: Eclipse Public License - v 2.0
+    url: https://www.eclipse.org/legal/epl-2.0/
 
 tags:
    - name: auth
      description: Operations related to authentication and authorization
-   - name: user
    - name: competition
+     description: Operations related to competitions
    - name: division
-   - name: team
-   - name: season
+     description: Operations related to divisions
    - name: match
+     description: Operations related to matches
+   - name: season
+     description: Operations related to seasons
+   - name: team
+     description: Operations related to teams
+   - name: user
+     description: Operations related to users
 
 
 servers:
@@ -231,7 +241,7 @@ paths:
       parameters:
         - in: path
           name: competition
-          required: false
+          required: true
           schema:
             type: integer
             example: 1
@@ -253,7 +263,7 @@ paths:
       parameters:
         - in: path
           name: division
-          required: false
+          required: true
           schema:
             type: integer
             example: 1
@@ -363,6 +373,7 @@ paths:
       parameters:
         - in: path
           name: id
+          required: true
           schema:
             type: integer
           description: The ID of the match.
@@ -385,7 +396,8 @@ paths:
         be authenticated as a competition admin.
       parameters:
         - in: path
-          name: id
+          name: match
+          required: true
           schema:
             type: integer
           description: The match ID.

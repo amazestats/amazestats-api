@@ -3,16 +3,19 @@ workflows:
   build-and-deploy:
     jobs:
       - build
-      - lint
+      - lint-clj
+      - lint-openapi
       - deploy:
           requires:
             - build
           filters:
             branches:
               only: sequential-branch-filter
+
 orbs:
   heroku: circleci/heroku@1.0.1
   clj-kondo: marcomorain/clj-kondo@0.2.0
+
 jobs:
   build:
     docker:
@@ -51,7 +54,7 @@ jobs:
       # run tests!
       - run: lein test
 
-  lint:
+  lint-clj:
     docker:
       - image: borkdude/clj-kondo:2019.05.27-alpha-SNAPSHOT
     steps:
@@ -59,6 +62,14 @@ jobs:
       - run:
           name: Lint
           command: clj-kondo --lint .
+
+  lint-openapi:
+    docker:
+      - image: node
+        
+    steps:
+      - checkout
+      - run: npx @redocly/openapi-cli lint resources/public/openapi/spec.yml
 
   deploy:
     executor: heroku/default

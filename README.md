@@ -8,6 +8,14 @@ once the service is deployed.
 
 The yaml can also be directly inspected in *resources/public/openapi/spec.yml*.
 
+### API Linting
+
+The API is linted when pushed to Circle CI.
+To lint locally use:
+`npx @redocly/openapi-cli lint resources/public/openapi/spec.yml`.
+
+Configuration for the linter can be found in: `.redocly.yaml'.
+
 ## Installation & Execution
 
 ### Requirements

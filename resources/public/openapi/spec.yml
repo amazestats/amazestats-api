@@ -540,9 +540,11 @@ components:
       type: object
       properties:
         id:
+          description: The user ID of the admin.
           type: integer
           example: 1
         alias:
+          description: The user alias of the admin.
           type: string
           readOnly: true
           example: Kalle
